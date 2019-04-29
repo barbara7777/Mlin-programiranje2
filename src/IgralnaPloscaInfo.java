@@ -1,7 +1,7 @@
 import java.util.*;
 
 public class IgralnaPloscaInfo {
-	private static Polje[] tabela = new Polje[24];
+	public static Polje[] tabela = new Polje[24];
 	private static Set<Set<Integer>> nepovezaneTrojice = new HashSet<>(); 
 	
 	// na i-tem mestu v tem vectorju je množica neurejenih parov indeksov polj, ki skupaj z i-tim poljem tvorijo trojico
@@ -49,7 +49,7 @@ public class IgralnaPloscaInfo {
 		return max - min == 2 && a != b && a != c && b != c;
 	}
 	
-	private static boolean tvorijoTrojico(Polje a, Polje b, Polje c) { 
+	public static boolean tvorijoTrojico(Polje a, Polje b, Polje c) { 
 		if (nepovezaneTrojice.contains(new HashSet<>(Arrays.asList(a.indeks, b.indeks, c.indeks))))
 			return true;
 		else {
@@ -84,7 +84,6 @@ public class IgralnaPloscaInfo {
 			}
 			kandidatiZaMlin.add(zaIzbranoPolje);
 		} 
-	
 	}
 
 }

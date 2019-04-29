@@ -1,3 +1,6 @@
+import java.util.Iterator;
+import java.util.Set;
+
 
 public class Igra {
 
@@ -44,21 +47,24 @@ public class Igra {
 	}
 	
 	// preveri, èe je na igralni plošèi kak mlin. 
-	public int[] jeMlin(int prvo, int drugo, int tretje) {
-		for (int[] trojica : trojice) { 
-			// ko imaš definirano barvo zadnjega igralca,
-			//spremeni prvi pogoj v == barva trenutnega igralca
-			if (plosca.polje(trojica[0]).zasedenost != Zasedeno.PRAZNO && 
-				(plosca.polje(trojica[0]).zasedenost == 
-				plosca.polje(trojica[1]).zasedenost) && 
-				(plosca.polje(trojica[1]).zasedenost == 
-				plosca.polje(trojica[2]).zasedenost)) {
-				return trojica;
+	public int[] jeMlin(int polje) {
+		Set<Set<Integer>> kandidati = IgralnaPloscaInfo.kandidatiZaMlin.get(polje); // množica parov, ki skupaj
+		// s poljem polje tvorijo trojico
+		int[] mlin = new int[3];
+		mlin[0] = polje;
+		int j = 1;
+
+			for (Set<Integer> pari : kandidati) { 
+				for (int i : pari) {
+					if (IgralnaPloscaInfo.tabela[i].zasedenost == IgralnaPloscaInfo.tabela[polje].zasedenost) { 
+						mlin[j] = i;
+						++j;}
+					else return null;
+				}
 			}
-		}
-		return null;
+	return mlin;
 	}
-	//
+			
 	
 	public boolean jeNasprotnikovo (Igralec player, Polje polje) { // preveri, èe polje pripada nasprotniku
 		if (player == racunalnik) 

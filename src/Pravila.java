@@ -2,7 +2,7 @@
 public class Pravila {
 
 	// veljavnost potez
-	public static boolean jeVeljavna(Igralec player, Poteza poteza, Igra g) { 		
+	public static boolean jeVeljavna(Igralec player, Poteza poteza, Igra g) { 		// preveriše, èe se res premakne
 		if (player.faza == 1 || player.faza == 3) {
 			if  (poteza.koncno.zasedenost != Zasedeno.PRAZNO) return false;			
 		}
