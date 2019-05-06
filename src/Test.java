@@ -68,6 +68,7 @@ public class Test {
 		for (Polje polje : IgralnaPloscaInfo.tabela) 
 		System.out.print(polje.zasedenost + "  ");
 		
+		
 	}
 
 }

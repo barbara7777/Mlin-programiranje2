@@ -9,9 +9,11 @@ import java.awt.event.MouseMotionListener;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.swing.JPanel;
+import javax.swing.*;
 
+@SuppressWarnings("serial")
 public class GUIigralnaPlosca extends JPanel implements MouseListener, MouseMotionListener {
+	
 	int sirina, visina;
 	static Igra igra;
 	Polje izbranoPolje;
@@ -33,9 +35,11 @@ public class GUIigralnaPlosca extends JPanel implements MouseListener, MouseMoti
 	
 	
 	public GUIigralnaPlosca(int sirina, int visina) {
+		super();
 		this.sirina = sirina;
 		this.visina = visina;
-		igra = null;
+		igra = new Igra();
+		
 		izbranoPolje = null;
 		
 		barvaPlosckov1 = Color.YELLOW;
@@ -84,16 +88,41 @@ public class GUIigralnaPlosca extends JPanel implements MouseListener, MouseMoti
 				//}
 			}
 		
-	}		
-	
-	
+		// risem polja
+		for (Polje polje : igra.plosca.tabela) {
+			g.drawOval(pretvori(polje.vrstica), pretvori(polje.stolpec),  polmer, polmer);
+			for (Polje sosed : polje.povezave) {
+				g.drawLine(pretvori(polje.vrstica), pretvori(polje.stolpec), pretvori(sosed.vrstica), pretvori(sosed.stolpec));
+			}
+		}
+		
+	}
 	private static void nastaviIgro (Igra game) {
 		igra = game;
 	}
 	
+	private int pretvori(int x) {
+		return 25 + x*100;
+	}
 	
-	
-	
+	private void narisiPolje() {
+		
+		}
+		
+	 /// test
+
+	  public static void main(String[] args) {
+	    JFrame.setDefaultLookAndFeelDecorated(true);
+	    JFrame frame = new JFrame("Draw Oval and Circle");
+	    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	    frame.setBackground(Color.white);
+	    frame.setSize(700, 700);
+	 
+	    GUIigralnaPlosca panel = new GUIigralnaPlosca(650, 650);
+	 
+	    frame.add(panel);
+	    frame.setVisible(true);
+	  }
 	
 	// Spodaj so funkcije ob klikih, ....
 	

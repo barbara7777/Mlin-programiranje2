@@ -2,20 +2,20 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JFrame;
 
+@SuppressWarnings("serial")
 public class GUIokno extends JFrame implements ActionListener {
-	GUIigralnaPlosca plosca;
+	
+	private GUIigralnaPlosca plosca;
 	
 	public GUIokno() {
-		
 		super();
 		
-		setTitle("Igra mlin");
-		plosca = new GUIigralnaPlosca(600, 600);
+		this.setTitle("Igra mlin");
+		plosca = new GUIigralnaPlosca(650, 650);
 		add(plosca);
-		
+		this.add(plosca);
 		
 	}
-
 	
 	
 	@Override

@@ -47,6 +47,7 @@ public class IgralnaPloscaInfo {
 			
 		// sestavi Vector trojic, kandidatov za mlin
 		naredi();
+		ustvariPovezave();
 	}
 	
 	public static boolean staPovezana (Polje prvo, Polje drugo) { // preveri, èe je med poljema povezava
@@ -58,6 +59,18 @@ public class IgralnaPloscaInfo {
 			return true;
 		else return false;
 	}
+	
+	public static void ustvariPovezave () { 
+		for (Polje prvo : tabela) {
+			for (Polje drugo : tabela) {
+				if (staPovezana(prvo, drugo)) {
+					prvo.povezave.add(drugo);
+					drugo.povezave.add(prvo);
+				}
+			}
+		}
+	}
+
 	
 	private static boolean soZaporednaSt (int a, int b, int c) { // pomozna funkcija
 		int min = Math.min(a, Math.min(b, c));
