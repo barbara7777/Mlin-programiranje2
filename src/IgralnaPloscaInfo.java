@@ -66,18 +66,17 @@ public class IgralnaPloscaInfo {
 	public static boolean staPovezana (Polje prvo, Polje drugo) { // preveri, èe je med poljema povezava
 		// kako bi to funkcijo napisala na drug naèin - preveri, èe sta vrstici isti, èe sta vzemi switch, preglej kiri vrstici sta isti....
 		// isto ponovi za stolpce
-
-		if ((prvo.vrstica == 3 && (prvo.stolpec == drugo.stolpec ||
-			(drugo.vrstica == 3 && Math.abs(prvo.stolpec - drugo.stolpec) == 1)))
+		boolean vrstice = prvo.vrstica == drugo.vrstica;
+		boolean stolpci = prvo.stolpec == drugo.stolpec;
+		boolean razlikaSt = Math.abs(prvo.stolpec - drugo.stolpec) == 1;
+		boolean razlikaVr = Math.abs(prvo.vrstica - drugo.vrstica) == 1;
+		
+		if ((prvo.vrstica == 3 && (stolpci || (drugo.vrstica == 3 && razlikaSt)))
 				|| // ponovim še za zamenjan vrstni red polj
-			(drugo.vrstica == 3 && (drugo.stolpec == prvo.stolpec ||
-			(prvo.vrstica == 3 && Math.abs(drugo.stolpec - prvo.stolpec) == 1))))
+			(drugo.vrstica == 3 && (stolpci || (prvo.vrstica == 3 && razlikaSt))))
 			return true;
-		else if ((prvo.stolpec == 3 && (prvo.vrstica == drugo.vrstica ||
-			(drugo.stolpec == 3 && Math.abs(prvo.vrstica - drugo.vrstica) == 1)))
-				||
-			(drugo.stolpec == 3 && (drugo.vrstica == prvo.vrstica ||
-			(prvo.stolpec == 3 && Math.abs(drugo.vrstica - prvo.vrstica) == 1))))
+		else if ((prvo.stolpec == 3 && (vrstice || (drugo.stolpec == 3 && razlikaVr))) ||
+				(drugo.stolpec == 3 && (vrstice || (prvo.stolpec == 3 &&razlikaVr))))
 			return true;
 		else return false;
 	}
