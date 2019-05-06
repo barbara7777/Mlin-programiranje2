@@ -28,6 +28,17 @@ public class IgralnaPloscaInfo {
 	public static void main(String[] args) {
 		IgralnaPloscaInfo plosca = new IgralnaPloscaInfo();
 		System.out.println(plosca.kandidatiZaMlin);
+		
+		for (Polje polje : tabela) {
+			System.out.print(polje.indeks + "  ima sosede \n");
+			for(Polje sosed: polje.povezave) {
+				System.out.println(sosed.indeks);
+			}
+			System.out.println("-----------");
+		}
+		
+		
+		
 	}
 	
 	// konstruktor
@@ -50,12 +61,23 @@ public class IgralnaPloscaInfo {
 		ustvariPovezave();
 	}
 	
+	
+	
 	public static boolean staPovezana (Polje prvo, Polje drugo) { // preveri, èe je med poljema povezava
-		if ((prvo.vrstica == 3 && (prvo.stolpec == drugo.stolpec || Math.abs(prvo.indeks - drugo.indeks) == 1)) ||
-		(drugo.vrstica == 3 && (drugo.stolpec == prvo.stolpec || Math.abs(drugo.indeks - prvo.indeks) == 1)))
+		// kako bi to funkcijo napisala na drug naèin - preveri, èe sta vrstici isti, èe sta vzemi switch, preglej kiri vrstici sta isti....
+		// isto ponovi za stolpce
+
+		if ((prvo.vrstica == 3 && (prvo.stolpec == drugo.stolpec ||
+			(drugo.vrstica == 3 && Math.abs(prvo.stolpec - drugo.stolpec) == 1)))
+				|| // ponovim še za zamenjan vrstni red polj
+			(drugo.vrstica == 3 && (drugo.stolpec == prvo.stolpec ||
+			(prvo.vrstica == 3 && Math.abs(drugo.stolpec - prvo.stolpec) == 1))))
 			return true;
-		else if ((prvo.stolpec == 3 && (prvo.vrstica == drugo.vrstica || Math.abs(prvo.vrstica - drugo.vrstica) == 1)) ||
-				(drugo.stolpec == 3 && (drugo.vrstica == prvo.vrstica || Math.abs(drugo.vrstica - prvo.vrstica) == 1)))
+		else if ((prvo.stolpec == 3 && (prvo.vrstica == drugo.vrstica ||
+			(drugo.stolpec == 3 && Math.abs(prvo.vrstica - drugo.vrstica) == 1)))
+				||
+			(drugo.stolpec == 3 && (drugo.vrstica == prvo.vrstica ||
+			(prvo.stolpec == 3 && Math.abs(drugo.vrstica - prvo.vrstica) == 1))))
 			return true;
 		else return false;
 	}

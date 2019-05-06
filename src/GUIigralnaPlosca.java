@@ -90,8 +90,11 @@ public class GUIigralnaPlosca extends JPanel implements MouseListener, MouseMoti
 		
 		// risem polja
 		for (Polje polje : igra.plosca.tabela) {
-			g.drawOval(pretvori(polje.vrstica), pretvori(polje.stolpec),  polmer, polmer);
-			for (Polje sosed : polje.povezave) {
+			g.fillOval(pretvori(polje.vrstica) - polmer, pretvori(polje.stolpec) - polmer,  2 * polmer, 2 * polmer);
+			
+			for (Polje sosed : igra.plosca.tabela) {
+				if (igra.plosca.staPovezana(polje, sosed))
+			//for (Polje sosed : polje.povezave) {
 				g.drawLine(pretvori(polje.vrstica), pretvori(polje.stolpec), pretvori(sosed.vrstica), pretvori(sosed.stolpec));
 			}
 		}
