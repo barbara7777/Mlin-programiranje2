@@ -1,4 +1,3 @@
-import java.util.Arrays;
 import java.util.Set;
 import java.util.Vector;
 
@@ -47,7 +46,7 @@ public class Igra {
 	public boolean jeNasprotnikovo (Polje polje) { // preveri, èe polje pripada nasprotniku
 		return (polje.zasedenost == nasprotnik.ime);
 	}
-		
+
 	
 	// prej moras preveriti da je poteza veljavna (predenj poklièeš to funkcijo) (èe je konèno prazno, ...)
 	public void narediPotezo(Poteza poteza) {
@@ -59,30 +58,34 @@ public class Igra {
 		}
 		else { // èe nimamo zaèetnega polja, ustrezno spremenimo število potez na prvi stopnji za igralca
 			++naPotezi.stPotez1;
-			Poteza.dodajPloscek(naPotezi,  poteza.koncno);
 			Igralec.naslednjaFaza(naPotezi); // in preverimo, èe je že dosegel drugo stopnjo 
 		}
 		
-		// da je konèno polje prazno, preverimo že v veljavnosti poteze
+		// izvedemo premik
 		Poteza.dodajPloscek(naPotezi, poteza.koncno);
 		
 		// odštejem plošèek nasprotniku od tistega, ki ima mlin
 		if (poteza.vzemi != null) {
 			poteza.vzemi.zasedenost = Polje.prazno;
-			if (naPotezi == igralec) --igralec.ploscki;
-			else --racunalnik.ploscki; 
+			--nasprotnik.ploscki;
 		} 
 			
+		// to ne sodi sem
+		//if (jeMlin(poteza.koncno.indeks).size() != 0) 
+		//	System.out.println("Imamo mlin! " + jeMlin(poteza.koncno.indeks));  
+		// dodaj kaj se zgodi, èe je mlin
+		
+		// dodaj if konecIgre() se nekaj zgodi.
+		if (konecIgre()) {
+			System.out.println("KONEC IGRE!");
+			System.out.println("Zmagal je " + naPotezi);
+		}
 		// ko je konec poteze, je na vrsti drugi igralec
 		naPotezi = (naPotezi == igralec) ? racunalnik : igralec;
 		nasprotnik = (naPotezi == igralec) ? racunalnik : igralec;
 		// dodaj spreminjanje parametrov pri igralcu, ce je mlin ipd.
-		if (jeMlin(poteza.koncno.indeks).size() != 0) 
-			System.out.println("Imamo mlin! " + jeMlin(poteza.koncno.indeks));  
-		// dodaj kaj se zgodi, èe je mlin
-		
-		// dodaj if konecIgre() se nekaj zgodi.
 	}
+	
 	
 	private boolean konecIgre() {
 	return ((igralec.faza == 3 && igralec.ploscki < 3) ||

@@ -21,8 +21,5 @@ public class Igralec {
 	public String toString () {
 		return ime;
 	}
-	
-	
-	
-	
+
 }
