@@ -26,19 +26,9 @@ public class IgralnaPloscaInfo {
 	
 	// main za testiranje
 	public static void main(String[] args) {
-		IgralnaPloscaInfo plosca = new IgralnaPloscaInfo();
-		System.out.println(plosca.kandidatiZaMlin);
-		
 		for (Polje polje : tabela) {
-			System.out.print(polje.indeks + "  ima sosede \n");
-			for(Polje sosed: polje.povezave) {
-				System.out.println(sosed.indeks);
-			}
-			System.out.println("-----------");
+			System.out.println("Indeks " + polje.indeks + " koordinati: " + polje.vrstica + " " + polje.stolpec);
 		}
-		
-		
-		
 	}
 	
 	// konstruktor
@@ -73,7 +63,7 @@ public class IgralnaPloscaInfo {
 		
 		if ((prvo.vrstica == 3 && (stolpci || (drugo.vrstica == 3 && razlikaSt)))
 				|| // ponovim še za zamenjan vrstni red polj
-			(drugo.vrstica == 3 && (stolpci || (prvo.vrstica == 3 && razlikaSt))))
+			(drugo.vrstica == 3 && (stolpci || (prvo.vrstica == 3 && razlikaSt)))) 
 			return true;
 		else if ((prvo.stolpec == 3 && (vrstice || (drugo.stolpec == 3 && razlikaVr))) ||
 				(drugo.stolpec == 3 && (vrstice || (prvo.stolpec == 3 &&razlikaVr))))
