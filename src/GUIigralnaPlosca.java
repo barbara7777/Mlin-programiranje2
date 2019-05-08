@@ -98,12 +98,12 @@ public class GUIigralnaPlosca extends JPanel implements MouseListener, MouseMoti
 		for (Polje polje : igra.plosca.tabela) {
 			if (polje.zasedenost.equals("racunalnik")) {
 				g.setColor(barvaPlosckov1);
-				g.fillOval(pretvori(polje.vrstica) - polmerPloscka, pretvori(polje.stolpec) - polmerPloscka,
+				g.fillOval(pretvori(polje.stolpec) - polmerPloscka, pretvori(polje.vrstica) - polmerPloscka,
 				2 * polmerPloscka, 2 * polmerPloscka);
 				}
 			else if (polje.zasedenost.equals("igralec")) {
 				g.setColor(barvaPlosckov2);
-				g.fillOval(pretvori(polje.vrstica) - polmerPloscka, pretvori(polje.stolpec) - polmerPloscka,
+				g.fillOval(pretvori(polje.stolpec) - polmerPloscka, pretvori(polje.vrstica) - polmerPloscka,
 				2 * polmerPloscka, 2 * polmerPloscka);
 			}
 		}	
@@ -181,7 +181,7 @@ public class GUIigralnaPlosca extends JPanel implements MouseListener, MouseMoti
 			
 			aktivnaPoteza.koncno = izbranoPolje;
 			Poteza p = new Poteza(null, izbranoPolje, null);
-			
+			igra.narediPotezo(aktivnaPoteza);
 			}
 			// poklièi funkcijo, ki naredi potezo in znova nariši
 		
