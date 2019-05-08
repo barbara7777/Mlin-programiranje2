@@ -13,8 +13,8 @@ public class Polje {
 		vrstica = i / 3 - i / 12;
 		if (vrstica == 3) stolpec = i % 3 + 4 * (i / 12);			
 		else stolpec = 3 + (i % 3 - 1) * Math.abs(vrstica - 3);
+		
 		zasedenost = prazno;
-	
 		povezave = new HashSet<Polje>();
 	}
 	

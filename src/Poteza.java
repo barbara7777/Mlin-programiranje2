@@ -1,8 +1,8 @@
 
 public class Poteza {
-	Polje zacetno;
-	Polje koncno;
-	Polje vzemi;
+	Polje zacetno = null;
+	Polje koncno = null;
+	Polje vzemi = null;
 	
 	
 	public Poteza(Polje zacetno, Polje koncno, Polje vzemi) {

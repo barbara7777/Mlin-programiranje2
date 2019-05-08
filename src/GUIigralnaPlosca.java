@@ -17,6 +17,7 @@ public class GUIigralnaPlosca extends JPanel implements MouseListener, MouseMoti
 	static Igra igra;
 	Polje izbranoPolje;
 	Poteza aktivnaPoteza;
+	int delPoteze;
 	
 	Set<Polje> ploscki1; // mnozica polj v igri za prvega igralca
 	Set<Polje> ploscki2;
@@ -41,6 +42,7 @@ public class GUIigralnaPlosca extends JPanel implements MouseListener, MouseMoti
 		igra = new Igra();
 		
 		izbranoPolje = null;
+		aktivnaPoteza = new Poteza(null, null, null);
 		
 		barvaPlosckov1 = new Color(110, 165, 77);
 		barvaPlosckov2 = new Color(168, 79, 20);
@@ -54,6 +56,7 @@ public class GUIigralnaPlosca extends JPanel implements MouseListener, MouseMoti
 		polmerPloscka = 20;
 		debelinaPovezave = 3; 
 		debelinaRoba = 1;
+		
 		
 		// dodati moramo še metode, ki sledijo miški in tipkovnici; to platno je tisto, ki presreže te metode
 		addMouseListener(this);
@@ -75,25 +78,18 @@ public class GUIigralnaPlosca extends JPanel implements MouseListener, MouseMoti
 	
 	@Override
 	protected void paintComponent(Graphics g) {
-		/* kako bi naredila, da se polja narišejo samo enkrat in ne vedno znova... da bi bilo v tej funkciji
-		 * za risanje samo risanje plošèkov. Torej, da bi bilo polje v ozadnju???
-		 */
-		
 		Graphics2D g2 = (Graphics2D)g;
-		super.paintComponent(g); // super klièe objekt iz nadrazreda
+		super.paintComponent(g); 
 		setBackground(barvaOzadja);
 		
 		// kaj narišemo
-		
 		g2.setStroke(new BasicStroke(debelinaPovezave));
 		g.setColor(barvaCrt);
 		
 		// risem igralno plošèo
 		for (Polje polje : igra.plosca.tabela) {
 			g.fillOval(pretvori(polje.vrstica) - polmer, pretvori(polje.stolpec) - polmer,  2 * polmer, 2 * polmer);
-			for (Polje sosed : igra.plosca.tabela) {
-				if (igra.plosca.staPovezana(polje, sosed))
-			//for (Polje sosed : polje.povezave) {
+			for (Polje sosed : polje.povezave) {
 				g.drawLine(pretvori(polje.vrstica), pretvori(polje.stolpec), pretvori(sosed.vrstica), pretvori(sosed.stolpec));
 			}
 		}
@@ -111,6 +107,11 @@ public class GUIigralnaPlosca extends JPanel implements MouseListener, MouseMoti
 				2 * polmerPloscka, 2 * polmerPloscka);
 			}
 		}	
+		if (izbranoPolje != null) {
+			g.setColor(barvaIzbranegaPolja);
+			g.drawOval(pretvori(izbranoPolje.stolpec) - polmerPloscka, pretvori(izbranoPolje.vrstica) - polmerPloscka,
+					2 * polmerPloscka, 2 * polmerPloscka);
+		}
 	}
 
 	
@@ -169,14 +170,22 @@ public class GUIigralnaPlosca extends JPanel implements MouseListener, MouseMoti
 		for (Polje polje : igra.plosca.tabela) {
 			if ((Math.abs(pretvori(polje.vrstica) - klikY) < 30) && Math.abs(pretvori(polje.stolpec) - klikX) < 30){
 				izbranoPolje = polje;
-				System.out.println("Kliknila si  " + polje.indeks);
-				
-				repaint(); 
+				System.out.println("Kliknila si  " + polje.indeks);		
 			}
 		}
-		//if (igra.naPotezi.faza == 1) // && ni mlina
-			//aktivnaPoteza.koncno = izbranoPolje;
 		
+		if (igra.naPotezi.delPoteze == 1) {
+			
+		}
+		if (igra.naPotezi.faza == 1) { // && ni mlina
+			
+			aktivnaPoteza.koncno = izbranoPolje;
+			Poteza p = new Poteza(null, izbranoPolje, null);
+			
+			}
+			// poklièi funkcijo, ki naredi potezo in znova nariši
+		
+		repaint(); 
 	}
 
 	@Override

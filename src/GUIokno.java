@@ -11,7 +11,7 @@ public class GUIokno extends JFrame implements ActionListener {
 		super();
 		
 		this.setTitle("Igra mlin");
-		plosca = new GUIigralnaPlosca(650, 650);
+		plosca = new GUIigralnaPlosca(600, 600);
 		add(plosca);
 		this.add(plosca);
 		
