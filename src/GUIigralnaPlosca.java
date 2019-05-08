@@ -230,8 +230,10 @@ public class GUIigralnaPlosca extends JPanel implements MouseListener, MouseMoti
 			}
 			repaint();
 			break;
+			// manjka prepoznavanje mlinv ....
 			
 		case 3:
+			// case 3 še ni narejen
 			System.out.println("faza igralca je 3.");
 			if (igra.naPotezi.delPoteze == 1) {
 				aktivnaPoteza.zacetno = izbranoPolje;
@@ -244,7 +246,7 @@ public class GUIigralnaPlosca extends JPanel implements MouseListener, MouseMoti
 			else if (igra.naPotezi.delPoteze == 3) {
 				if (igra.obstajaMlin())
 					aktivnaPoteza.vzemi = izbranoPolje;
-				igra.narediPotezo(aktivnaPoteza);
+				
 				repaint();
 				novaPoteza();
 			}

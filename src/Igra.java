@@ -59,7 +59,6 @@ public class Igra {
 	}
 	
 	
-	
 	public void postaviPloscek(Polje koncno) {
 		if (!Pravila.jePraznoPolje(naPotezi, koncno, this))
 			return; // èe poteza ni veljavna, ne naredim niè
@@ -87,6 +86,7 @@ public class Igra {
 				imamMlin = true;
 			zamenjajIgralca();
 		}
+		// preveri, èe je konec igre in kaj se takrat zgodi...
 	}
 	
 	
@@ -109,72 +109,19 @@ public class Igra {
 	}
 	
 	
-	// prej moras preveriti da je poteza veljavna (predenj poklièeš to funkcijo) (èe je konèno prazno, ...)
-	public void narediPotezo(Poteza poteza) {
-		System.out.println("Igra " + naPotezi + " proti " + nasprotnik);
-		if (!Pravila.jeVeljavna(naPotezi, poteza, this)) return; // èe poteza ni veljavna, ne naredim niè
-		
-		
-		if (poteza.zacetno != null) {
-			poteza.zacetno.zasedenost = Polje.prazno; // èe imamo zaèetno polje, ga izpraznimo
-		}
-		else { // èe nimamo zaèetnega polja, ustrezno spremenimo število potez na prvi stopnji za igralca
-			++naPotezi.stPotez1;
-			Igralec.naslednjaFaza(naPotezi); // in preverimo, èe je že dosegel drugo stopnjo 
-		}
-		
-		// izvedemo premik
-		Poteza.dodajPloscek(naPotezi, poteza.koncno);
-		
-		// odštejem plošèek nasprotniku od tistega, ki ima mlin
-		if (poteza.vzemi != null) {
-			//poteza.vzemi.zasedenost = Polje.prazno;
-			Poteza.vzemiPloscek(poteza.vzemi);
-			--nasprotnik.ploscki;
-			imamMlin = false; 
-			naPotezi.vzemi = false;
-		} 
-			
-		// to ne sodi sem
-		if (jeMlin(poteza.koncno.indeks).size() != 0) {
-			naPotezi.vzemi = true;
-			System.out.println("Imamo mlin! " + jeMlin(poteza.koncno.indeks)); 
-			imamMlin = true;
-		}// dodaj kaj se zgodi, èe je mlin
-		
-		
-		naPotezi.delPoteze = 1; // ko opravim potezo, mora biti spet del poteze 1.
-		
-		// dodaj if konecIgre() se nekaj zgodi.
-		if (konecIgre()) {
-			System.out.println("KONEC IGRE!");
-			System.out.println("Zmagal je " + naPotezi);
-		}
-	/*		
-		for (int i = 0; i < plosca.tabela.length; i++) {
-			if (i%3 == 0)
-				System.out.println();
-			System.out.print(plosca.tabela[i].zasedenost + "  ");
-		}
-	*/
-		
-	}
 	private void zamenjajIgralca() {
 		// ko je konec poteze, je na vrsti drugi igralec
 		naPotezi = (naPotezi == igralec) ? racunalnik : igralec;
 		nasprotnik = (naPotezi == igralec) ? racunalnik : igralec;
-		// dodaj spreminjanje parametrov pri igralcu, ce je mlin ipd.
-		
 	}
-	
+
+		
 	private boolean konecIgre() {
 	return ((igralec.faza == 3 && igralec.ploscki < 3) ||
 			(racunalnik.faza == 3 && racunalnik.ploscki < 3));
 	}
+
 	
-	public boolean moveReady () {
-		return (naPotezi.delPoteze == 3);
-		}
 	public boolean obstajaMlin () {
 		for (Polje polje : plosca.tabela) {
 			if (jeMlin(polje.indeks).size() > 1 && !plosca.tabela[jeMlin(polje.indeks).get(0)].jePrazno())
