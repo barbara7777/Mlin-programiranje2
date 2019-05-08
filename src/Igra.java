@@ -50,7 +50,7 @@ public class Igra {
 	
 	// prej moras preveriti da je poteza veljavna (predenj poklièeš to funkcijo) (èe je konèno prazno, ...)
 	public void narediPotezo(Poteza poteza) {
-		System.out.println("Igra " + naPotezi + " proti " + nasprotnik);
+		//System.out.println("Igra " + naPotezi + " proti " + nasprotnik);
 		if (!Pravila.jeVeljavna(naPotezi, poteza, this)) return; // èe poteza ni veljavna, ne naredim niè
 
 		if (poteza.zacetno != null) {
@@ -68,11 +68,14 @@ public class Igra {
 		if (poteza.vzemi != null) {
 			poteza.vzemi.zasedenost = Polje.prazno;
 			--nasprotnik.ploscki;
+			naPotezi.vzemi = false;
 		} 
 			
 		// to ne sodi sem
-		//if (jeMlin(poteza.koncno.indeks).size() != 0) 
-		//	System.out.println("Imamo mlin! " + jeMlin(poteza.koncno.indeks));  
+		if (jeMlin(poteza.koncno.indeks).size() != 0) {
+			naPotezi.vzemi = true;
+			System.out.println("Imamo mlin! " + jeMlin(poteza.koncno.indeks));  
+		}
 		// dodaj kaj se zgodi, èe je mlin
 		
 		// dodaj if konecIgre() se nekaj zgodi.

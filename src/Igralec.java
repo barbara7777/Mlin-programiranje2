@@ -5,6 +5,7 @@ public class Igralec {
 	int faza;
 	String ime;
 	int delPoteze;
+	boolean vzemi;
 	
 	public Igralec(String ime) {
 		this.ime = ime;
@@ -12,6 +13,7 @@ public class Igralec {
 		stPotez1 = 0;
 		faza = 1;
 		delPoteze = 2;
+		vzemi = false;
 	}
 	
 	public static void naslednjaFaza(Igralec igralec) {

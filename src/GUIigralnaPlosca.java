@@ -7,6 +7,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.util.Set;
+import java.util.Vector;
 
 import javax.swing.*;
 
@@ -27,6 +28,7 @@ public class GUIigralnaPlosca extends JPanel implements MouseListener, MouseMoti
 	Color barvaCrt;
 	Color barvaOzadja;
 	Color barvaIzbranegaPolja;
+	Color barvaMlina;
 	
 	int polmer;
 	int polmerPloscka;
@@ -45,11 +47,11 @@ public class GUIigralnaPlosca extends JPanel implements MouseListener, MouseMoti
 		aktivnaPoteza = new Poteza(null, null, null);
 		
 		barvaPlosckov1 = new Color(110, 165, 77);
-		barvaPlosckov2 = new Color(168, 79, 20);
+		barvaPlosckov2 = new Color(168, 79, 120);
 		barvaCrt = Color.DARK_GRAY;
 		barvaOzadja = Color.WHITE;
 		barvaIzbranegaPolja = Color.GREEN;
-	
+		barvaMlina = Color.YELLOW;	
 		
 		
 		polmer = 10;
@@ -99,19 +101,34 @@ public class GUIigralnaPlosca extends JPanel implements MouseListener, MouseMoti
 			if (polje.zasedenost.equals("racunalnik")) {
 				g.setColor(barvaPlosckov1);
 				g.fillOval(pretvori(polje.stolpec) - polmerPloscka, pretvori(polje.vrstica) - polmerPloscka,
-				2 * polmerPloscka, 2 * polmerPloscka);
-				}
+						2 * polmerPloscka, 2 * polmerPloscka);
+			}
 			else if (polje.zasedenost.equals("igralec")) {
 				g.setColor(barvaPlosckov2);
 				g.fillOval(pretvori(polje.stolpec) - polmerPloscka, pretvori(polje.vrstica) - polmerPloscka,
 				2 * polmerPloscka, 2 * polmerPloscka);
 			}
 		}	
+		// oznaèi izbrano polje
 		if (izbranoPolje != null) {
 			g.setColor(barvaIzbranegaPolja);
 			g.drawOval(pretvori(izbranoPolje.stolpec) - polmerPloscka, pretvori(izbranoPolje.vrstica) - polmerPloscka,
 					2 * polmerPloscka, 2 * polmerPloscka);
 		}
+		// oznaèi mlin
+		
+		/*
+		Vector<Integer> mlin = igra.jeMlin(izbranoPolje.indeks);
+		if (mlin.size() != 0) {
+			for (int i : mlin) {
+				Polje p = igra.plosca.tabela[i];
+				g.setColor(barvaMlina);
+				g.drawOval(pretvori(p.stolpec) - polmerPloscka, pretvori(p.vrstica) - polmerPloscka,
+						2 * polmerPloscka, 2 * polmerPloscka);
+					
+			}
+		}
+	*/
 	}
 
 	
@@ -170,21 +187,67 @@ public class GUIigralnaPlosca extends JPanel implements MouseListener, MouseMoti
 		for (Polje polje : igra.plosca.tabela) {
 			if ((Math.abs(pretvori(polje.vrstica) - klikY) < 30) && Math.abs(pretvori(polje.stolpec) - klikX) < 30){
 				izbranoPolje = polje;
-				System.out.println("Kliknila si  " + polje.indeks);		
+				//System.out.println("Kliknila si  " + polje.indeks);		
 			}
 		}
 		
 		if (igra.naPotezi.delPoteze == 1) {
 			
 		}
-		if (igra.naPotezi.faza == 1) { // && ni mlina
-			
-			aktivnaPoteza.koncno = izbranoPolje;
-			Poteza p = new Poteza(null, izbranoPolje, null);
-			igra.narediPotezo(aktivnaPoteza);
+		switch (igra.naPotezi.faza) { // && ni mlina
+		case 1:
+			if (delPoteze == 1) {
+				aktivnaPoteza.koncno = izbranoPolje;
+				
+				/*	
+				if (igra.naPotezi.vzemi) {
+					aktivnaPoteza.koncno = izbranoPolje;
+					System.out.println("Katerega vzameš?");
+					delPoteze = 3;
+					break;
+				}
+			else if (delPoteze == 3) {
+	
 			}
-			// poklièi funkcijo, ki naredi potezo in znova nariši
+				 */
+			}
+			igra.narediPotezo(aktivnaPoteza);
+			break;
+		case 2:
+			
+			if (delPoteze == 1) {
+				aktivnaPoteza.zacetno = izbranoPolje;
+				delPoteze++;
+				break;
+			}
+			else if (delPoteze == 2) {
+				aktivnaPoteza.koncno = izbranoPolje;
+				System.out.println("Kam se hoèeš premakniti?");
+				delPoteze++;
+				break;
+			}
+			else if (delPoteze == 3) {
+				aktivnaPoteza.vzemi = izbranoPolje;
+				//igra.narediPotezo(aktivnaPoteza);
+				delPoteze++;
+				break;
+			}
+			
+			if (aktivnaPoteza.koncno != null && !igra.naPotezi.vzemi)
+				igra.narediPotezo(aktivnaPoteza);
+			repaint();
+			
+		case 3:
+			aktivnaPoteza.zacetno = izbranoPolje;
+			System.out.println("Kam se hoèeš premakniti?");
+			delPoteze++;
+			
+			igra.narediPotezo(aktivnaPoteza);
+			
+			break;
+		}
 		
+		if (delPoteze == 3) delPoteze = 1;
 		repaint(); 
 	}
 
