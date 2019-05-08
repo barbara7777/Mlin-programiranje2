@@ -1,6 +1,29 @@
 
 public class Pravila {
 
+	
+	public static boolean lahkoVzamem (Igralec player, Polje polje, Igra g) {
+		if (!g.jeNasprotnikovo(polje))
+			return false;
+		else 
+			return true;	
+	}
+	
+	public static boolean lahkoPostavim (Igralec player, Polje polje, Igra g) {
+		if (player.faza != 2) {
+			if (polje.zasedenost != Polje.prazno)
+				return false;
+		}
+		else {
+			if (polje.zasedenost != Polje.prazno) {
+					  // || !IgralnaPloscaInfo.staPovezana(poteza.zacetno, poteza.koncno)) {
+				System.out.println("Ni prazno");
+				return false;			
+			}
+		}
+		return true;
+	}
+	
 	// veljavnost potez
 	public static boolean jeVeljavna(Igralec player, Poteza poteza, Igra g) {
 		if(poteza.zacetno == poteza.koncno) {
@@ -13,16 +36,19 @@ public class Pravila {
 		else if (player.faza == 2) {
 			// èe konèno ni prazno ali nista povezana, return false
 			if (poteza.koncno.zasedenost != Polje.prazno || 
-				   !IgralnaPloscaInfo.staPovezana(poteza.zacetno, poteza.koncno)) return false;			
+				   !IgralnaPloscaInfo.staPovezana(poteza.zacetno, poteza.koncno)) {
+				System.out.println("Ni prazno ali pa je predaleè.");
+				return false;			
+			}
 		}
 		// èe imamo za jemati
 		if (poteza.vzemi != null) {
+			if (poteza.vzemi.zasedenost == Polje.prazno) 
+				System.out.println("Na tem polju ni plošèka.");
+			
 			if (!g.jeNasprotnikovo(poteza.vzemi)) {
 				System.out.println("Tega plošèka ne moreš vzeti!");
 				return false;
-			};
-			if (poteza.vzemi.zasedenost == Polje.prazno) {
-				System.out.println("Na tem polju ni plošèka.");				
 			}
 		}
 		return true; // èe je vse v redu, imamo veljavno potezo

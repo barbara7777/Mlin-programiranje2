@@ -26,7 +26,8 @@ public class IgralnaPloscaInfo {
 	
 	// main za testiranje
 	public static void main(String[] args) {
-		for (Polje polje : tabela) {
+		IgralnaPloscaInfo p = new IgralnaPloscaInfo();
+		for (Polje polje : p.tabela) {
 			System.out.println("Indeks " + polje.indeks + " koordinati: " + polje.vrstica + " " + polje.stolpec);
 		}
 	}

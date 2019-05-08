@@ -18,7 +18,7 @@ public class GUIigralnaPlosca extends JPanel implements MouseListener, MouseMoti
 	static Igra igra;
 	Polje izbranoPolje;
 	Poteza aktivnaPoteza;
-	int delPoteze;
+	//int delPoteze;
 	
 	Set<Polje> ploscki1; // mnozica polj v igri za prvega igralca
 	Set<Polje> ploscki2;
@@ -191,63 +191,48 @@ public class GUIigralnaPlosca extends JPanel implements MouseListener, MouseMoti
 			}
 		}
 		
-		if (igra.naPotezi.delPoteze == 1) {
-			
-		}
-		switch (igra.naPotezi.faza) { // && ni mlina
+		switch (igra.naPotezi.faza) { 
 		case 1:
-			if (delPoteze == 1) {
-				aktivnaPoteza.koncno = izbranoPolje;
-				
-				/*	
-				if (igra.naPotezi.vzemi) {
-					aktivnaPoteza.koncno = izbranoPolje;
-					System.out.println("Katerega vzameš?");
-					delPoteze = 3;
-					break;
-				}
-			else if (delPoteze == 3) {
-	
+			if (igra.imamMlin) {
+				igra.vzemiPloscek(izbranoPolje);
 			}
-				 */
+			else{
+				igra.postaviPloscek(izbranoPolje);
 			}
-			igra.narediPotezo(aktivnaPoteza);
-			break;
-		case 2:
-			
-			if (delPoteze == 1) {
-				aktivnaPoteza.zacetno = izbranoPolje;
-				delPoteze++;
-				break;
-			}
-			else if (delPoteze == 2) {
-				aktivnaPoteza.koncno = izbranoPolje;
-				System.out.println("Kam se hoèeš premakniti?");
-				delPoteze++;
-				break;
-			}
-			else if (delPoteze == 3) {
-				aktivnaPoteza.vzemi = izbranoPolje;
-				//igra.narediPotezo(aktivnaPoteza);
-				delPoteze++;
-				break;
-			}
-			
-			if (aktivnaPoteza.koncno != null && !igra.naPotezi.vzemi)
-				igra.narediPotezo(aktivnaPoteza);
 			repaint();
+			break;
+			
+		case 2:
+			System.out.println("faza igralca je 2.");
+			igra.premikam = !igra.premikam; // ko prviè kliknem, nastavim premikam na true
+			if (igra.premikam) { //ko prviè kliknem
+				igra.vzemiPloscek(izbranoPolje); 
+			}
+			else { // ob drugem kliku
+				igra.postaviPloscek(izbranoPolje);
+			}
+			repaint();
+			break;
 			
 		case 3:
-			aktivnaPoteza.zacetno = izbranoPolje;
-			System.out.println("Kam se hoèeš premakniti?");
-			delPoteze++;
-			
-			igra.narediPotezo(aktivnaPoteza);
-			
+			System.out.println("faza igralca je 3.");
+			if (igra.naPotezi.delPoteze == 1) {
+				aktivnaPoteza.zacetno = izbranoPolje;
+				igra.naPotezi.delPoteze++;			
+			}
+			else if(igra.naPotezi.delPoteze  == 2) {
+				aktivnaPoteza.koncno = izbranoPolje;
+				igra.naPotezi.delPoteze++;
+			}
+			else if (igra.naPotezi.delPoteze == 3) {
+				if (igra.obstajaMlin())
+					aktivnaPoteza.vzemi = izbranoPolje;
+				igra.narediPotezo(aktivnaPoteza);
+				repaint();
+				novaPoteza();
+			}
 			break;
 		}
-		
-		if (delPoteze == 3) delPoteze = 1;
 		repaint(); 
 	}
 
@@ -269,4 +254,11 @@ public class GUIigralnaPlosca extends JPanel implements MouseListener, MouseMoti
 		
 	}
 
+	private void novaPoteza () {
+		aktivnaPoteza.zacetno = null;
+		aktivnaPoteza.koncno = null;
+		aktivnaPoteza.vzemi = null;
+		igra.naPotezi.delPoteze = 1;
+		
+	}
 }

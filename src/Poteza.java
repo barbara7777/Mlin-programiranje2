@@ -19,7 +19,5 @@ public class Poteza {
 	
 	public static void vzemiPloscek(Polje polje) {
 		polje.zasedenost = Polje.prazno;
-		
-		
 	}
 }
