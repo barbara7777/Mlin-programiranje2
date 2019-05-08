@@ -54,11 +54,14 @@ public class Igra {
 		return (polje.zasedenost == nasprotnik.ime);
 	}
 
+	public boolean jeIgralcevo (Polje polje) { // preveri, èe polje pripada tistemu, ki je na potezi
+		return (polje.zasedenost == naPotezi.ime);
+	}
 	
 	
 	
 	public void postaviPloscek(Polje koncno) {
-		if (!Pravila.lahkoPostavim(naPotezi, koncno, this))
+		if (!Pravila.jePraznoPolje(naPotezi, koncno, this))
 			return; // èe poteza ni veljavna, ne naredim niè
 		
 		if (naPotezi.faza == 1) {
@@ -73,18 +76,25 @@ public class Igra {
 			zamenjajIgralca();
 	}
 	
+	
+	public void premakni(Igralec player, Polje zacetno, Polje koncno) {
+		if (Pravila.lahkoPremaknem(zacetno, koncno, this)) {
+			if (zacetno.zasedenost != player.ime)
+				return;
+			zacetno.zasedenost = Polje.prazno;
+			koncno.zasedenost = player.ime;
+			if (jeMlin(koncno.indeks).size() > 1)
+				imamMlin = true;
+			zamenjajIgralca();
+		}
+	}
+	
+	
 	public void vzemiPloscek(Polje vzemi) {
-		//if (!Pravila.jeVeljavna(naPotezi, new Poteza(null, null, vzemi), this))
-			//return;	
-		
-		//if (!premikam)
-			//zamenjajIgralca();
-		
 		if (premikam) {
 			System.out.println("izpraznim polje");
 			vzemi.zasedenost = Polje.prazno;
 		}
-		
 		else if (imamMlin) {
 			if (!Pravila.lahkoVzamem(naPotezi, vzemi, this))
 				return;

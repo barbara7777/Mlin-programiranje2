@@ -18,6 +18,8 @@ public class GUIigralnaPlosca extends JPanel implements MouseListener, MouseMoti
 	static Igra igra;
 	Polje izbranoPolje;
 	Poteza aktivnaPoteza;
+	Polje zacetno;
+	Polje koncno;
 	//int delPoteze;
 	
 	Set<Polje> ploscki1; // mnozica polj v igri za prvega igralca
@@ -45,6 +47,7 @@ public class GUIigralnaPlosca extends JPanel implements MouseListener, MouseMoti
 		
 		izbranoPolje = null;
 		aktivnaPoteza = new Poteza(null, null, null);
+
 		
 		barvaPlosckov1 = new Color(110, 165, 77);
 		barvaPlosckov2 = new Color(168, 79, 120);
@@ -185,11 +188,16 @@ public class GUIigralnaPlosca extends JPanel implements MouseListener, MouseMoti
 		klikY = e.getY();
 		
 		for (Polje polje : igra.plosca.tabela) {
-			if ((Math.abs(pretvori(polje.vrstica) - klikY) < 30) && Math.abs(pretvori(polje.stolpec) - klikX) < 30){
+			if ((Math.abs(pretvori(polje.vrstica) - klikY) < 30) && Math.abs(pretvori(polje.stolpec) - klikX) < 30) {
 				izbranoPolje = polje;
 				//System.out.println("Kliknila si  " + polje.indeks);		
 			}
 		}
+		if (izbranoPolje == null) { // kliknila si mimo vsakega polja. izmislim si polje, da se izognem erroru
+			izbranoPolje = new Polje(-1);
+			izbranoPolje.zasedenost = "neveljavno polje";
+			}
+		
 		
 		switch (igra.naPotezi.faza) { 
 		case 1:
@@ -203,13 +211,22 @@ public class GUIigralnaPlosca extends JPanel implements MouseListener, MouseMoti
 			break;
 			
 		case 2:
-			System.out.println("faza igralca je 2.");
 			igra.premikam = !igra.premikam; // ko prviè kliknem, nastavim premikam na true
 			if (igra.premikam) { //ko prviè kliknem
-				igra.vzemiPloscek(izbranoPolje); 
+				zacetno = izbranoPolje;
+				if(!igra.jeIgralcevo(izbranoPolje)) {
+					System.out.println("To ni tvoja plošèica!");
+					igra.premikam = !igra.premikam;
+					break;
+				}
 			}
 			else { // ob drugem kliku
-				igra.postaviPloscek(izbranoPolje);
+				if (zacetno == izbranoPolje) {
+					izbranoPolje = null;
+					break;
+				}
+				koncno = izbranoPolje;
+				igra.premakni(igra.naPotezi, zacetno, koncno);
 			}
 			repaint();
 			break;

@@ -17,8 +17,14 @@ public class Igralec {
 	}
 	
 	public static void naslednjaFaza(Igralec igralec) {
-		if (igralec.faza == 2 && igralec.ploscki == 3) ++igralec.faza;
-		else if  (igralec.stPotez1 == 9) ++igralec.faza;
+		if (igralec.faza == 2 && igralec.ploscki == 3) {
+			++igralec.faza;
+			System.out.println(igralec.ime + " je v " + igralec.faza + ". fazi.");
+		}
+		else if  (igralec.stPotez1 == 9) {
+			++igralec.faza;
+			System.out.println(igralec.ime + " je v " + igralec.faza + ". fazi.");
+		}
 		
 	}
 	
