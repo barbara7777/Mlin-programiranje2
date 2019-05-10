@@ -21,7 +21,7 @@ public class Igralec {
 			++igralec.faza;
 			System.out.println(igralec.ime + " je v " + igralec.faza + ". fazi.");
 		}
-		else if  (igralec.stPotez1 == 9) {
+		else if  (igralec.stPotez1 == 9 && igralec.faza == 1) {
 			++igralec.faza;
 			System.out.println(igralec.ime + " je v " + igralec.faza + ". fazi.");
 		}

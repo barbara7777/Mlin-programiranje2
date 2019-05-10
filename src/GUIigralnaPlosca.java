@@ -17,10 +17,9 @@ public class GUIigralnaPlosca extends JPanel implements MouseListener, MouseMoti
 	int sirina, visina;
 	static Igra igra;
 	Polje izbranoPolje;
-	Poteza aktivnaPoteza;
-	Polje zacetno;
-	Polje koncno;
-	//int delPoteze;
+	Polje zacetno = null;
+	Polje koncno = null;
+	Polje vzemi = null;
 	
 	Set<Polje> ploscki1; // mnozica polj v igri za prvega igralca
 	Set<Polje> ploscki2;
@@ -30,7 +29,6 @@ public class GUIigralnaPlosca extends JPanel implements MouseListener, MouseMoti
 	Color barvaCrt;
 	Color barvaOzadja;
 	Color barvaIzbranegaPolja;
-	Color barvaMlina;
 	
 	int polmer;
 	int polmerPloscka;
@@ -44,24 +42,18 @@ public class GUIigralnaPlosca extends JPanel implements MouseListener, MouseMoti
 		this.sirina = sirina;
 		this.visina = visina;
 		igra = new Igra();
-		
 		izbranoPolje = null;
-		aktivnaPoteza = new Poteza(null, null, null);
-
 		
 		barvaPlosckov1 = new Color(110, 165, 77);
-		barvaPlosckov2 = new Color(168, 79, 120);
+		barvaPlosckov2 = new Color(195, 114, 249);
 		barvaCrt = Color.DARK_GRAY;
 		barvaOzadja = Color.WHITE;
 		barvaIzbranegaPolja = Color.GREEN;
-		barvaMlina = Color.YELLOW;	
-		
 		
 		polmer = 10;
 		polmerPloscka = 20;
 		debelinaPovezave = 3; 
 		debelinaRoba = 1;
-		
 		
 		// dodati moramo še metode, ki sledijo miški in tipkovnici; to platno je tisto, ki presreže te metode
 		addMouseListener(this);
@@ -70,11 +62,6 @@ public class GUIigralnaPlosca extends JPanel implements MouseListener, MouseMoti
 	}
 	
 
-	
-	
-	public void narisi() {
-		repaint(); // poklice paintComponent
-	}
 	
 	@Override
 	public Dimension getPreferredSize() {
@@ -98,7 +85,7 @@ public class GUIigralnaPlosca extends JPanel implements MouseListener, MouseMoti
 				g.drawLine(pretvori(polje.vrstica), pretvori(polje.stolpec), pretvori(sosed.vrstica), pretvori(sosed.stolpec));
 			}
 		}
-		
+
 		// rišem plošèke
 		for (Polje polje : igra.plosca.tabela) {
 			if (polje.zasedenost.equals("racunalnik")) {
@@ -118,37 +105,14 @@ public class GUIigralnaPlosca extends JPanel implements MouseListener, MouseMoti
 			g.drawOval(pretvori(izbranoPolje.stolpec) - polmerPloscka, pretvori(izbranoPolje.vrstica) - polmerPloscka,
 					2 * polmerPloscka, 2 * polmerPloscka);
 		}
-		// oznaèi mlin
-		
-		/*
-		Vector<Integer> mlin = igra.jeMlin(izbranoPolje.indeks);
-		if (mlin.size() != 0) {
-			for (int i : mlin) {
-				Polje p = igra.plosca.tabela[i];
-				g.setColor(barvaMlina);
-				g.drawOval(pretvori(p.stolpec) - polmerPloscka, pretvori(p.vrstica) - polmerPloscka,
-						2 * polmerPloscka, 2 * polmerPloscka);
-					
-			}
-		}
-	*/
 	}
 
-	
-	private void narisiPolje() {
-		// ???
-	}
-	
-	private static void nastaviIgro (Igra game) {
-		igra = game;
-	}
 	
 	private int pretvori(int x) {
 		return 60 + x*90;
 	}
 	
 	 /// test
-
 	  public static void main(String[] args) {
 	    JFrame.setDefaultLookAndFeelDecorated(true);
 	    JFrame frame = new JFrame("Igra mlin");
@@ -182,20 +146,27 @@ public class GUIigralnaPlosca extends JPanel implements MouseListener, MouseMoti
 		
 	}
 
+	static void prt (String s) 
+	{	
+		System.out.println(s);
+	}
+	
+	
 	@Override
 	public void mousePressed(MouseEvent e) {
+		if (igra.zamrzni) return;
 		klikX = e.getX();
 		klikY = e.getY();
 		
 		for (Polje polje : igra.plosca.tabela) {
 			if ((Math.abs(pretvori(polje.vrstica) - klikY) < 30) && Math.abs(pretvori(polje.stolpec) - klikX) < 30) {
-				izbranoPolje = polje;
-				//System.out.println("Kliknila si  " + polje.indeks);		
+				izbranoPolje = polje;		
 			}
 		}
-		if (izbranoPolje == null) { // kliknila si mimo vsakega polja. izmislim si polje, da se izognem erroru
-			izbranoPolje = new Polje(-1);
-			izbranoPolje.zasedenost = "neveljavno polje";
+		if (izbranoPolje == null) { // klik mimo vsakega polja. izmislim si polje, da se izognem erroru
+			return;
+			//izbranoPolje = new Polje(-1);
+			//izbranoPolje.zasedenost = "neveljavno polje";
 			}
 		
 		
@@ -211,45 +182,62 @@ public class GUIigralnaPlosca extends JPanel implements MouseListener, MouseMoti
 			break;
 			
 		case 2:
-			igra.premikam = !igra.premikam; // ko prviè kliknem, nastavim premikam na true
-			if (igra.premikam) { //ko prviè kliknem
-				zacetno = izbranoPolje;
-				if(!igra.jeIgralcevo(izbranoPolje)) {
-					System.out.println("To ni tvoja plošèica!");
-					igra.premikam = !igra.premikam;
-					break;
+		case 3:
+			//na zacetku so vsi null, to so: zacetno, koncno,vzemi
+			//Ce je zacetno null, ga nastavim. Tu mlina ne more biti
+			//Ce zacetno ni null, koncno pa je, potem moram nastaviti konco. Tudi tu mlina ni
+			//Ce zacetno ni null in koncno ni null, potem ga je treba prestavit (samo ce mlina ni 
+			//ker ce mlin je, potem morem enega vzeti). Ce ni mlina, lahko vse resitiram
+			//Ce pa je mlin, moram enega vzeti
+			
+			if (zacetno == null) { // Zacetno je treba nastaviti
+				if (igra.jeIgralcevo(izbranoPolje)) {
+					prt("Izbral si zacetno polje premika");
+					zacetno = izbranoPolje;
 				}
+				else
+					prt("Za zacetno polje si izbral neveljavno. Ponovi.");
+				break;
 			}
-			else { // ob drugem kliku
-				if (zacetno == izbranoPolje) {
-					izbranoPolje = null;
+			if (koncno == null) { // Koncno polje je treba nastaviti
+				//Koncno polje je lahko samo prazno polje
+				if (!Pravila.jePraznoPolje(igra.naPotezi, izbranoPolje, igra)) {
+					prt("Za koncno polje nisi izbral praznega polja. Ponovi izbiro koncega polja");
 					break;
 				}
 				koncno = izbranoPolje;
-				igra.premakni(igra.naPotezi, zacetno, koncno);
+				prt("Izbral si koncno polje");
+			}
+			//Tukaj je treba torej ploscico prestaviti, ce mlina ni (pri prestavitvi ga ne sme se biti)
+			if (!igra.imamMlin) {  //Prestavimo ploscico
+				if (!igra.premakni(igra.naPotezi,  zacetno, koncno)) {
+					prt("Poteza ni mozna, ker polja nista povezana. Ponovi potezo");
+					koncno = null;
+					zacetno = null;
+					break;
+				}
+				//Ce zdaj ni mlina na novo, potem
+				//lahko resitiram vse. Ce je, potrebujem nov klik
+				if (igra.imamMlin) { //Ker je mlin, potrebujem klik
+					prt("Naredil si mlin. Vzemi en ploscek");
+					break;
+				}
+				zacetno = null;
+				koncno = null;
+				igra.zamenjajIgralca();
+			}
+			else {
+				//Poberemo ploscico, ce je poteza veljavna
+				if (!igra.jeNasprotnikovo(izbranoPolje)) {
+					prt("Poskusal si vzeti ploscek ki ni nasprotikov. Ponovi.");
+					break;
+				}
+				igra.vzemiPloscek(izbranoPolje);
+				zacetno = null;
+				koncno = null;
+				break;
 			}
 			repaint();
-			break;
-			// manjka prepoznavanje mlinv ....
-			
-		case 3:
-			// case 3 še ni narejen
-			System.out.println("faza igralca je 3.");
-			if (igra.naPotezi.delPoteze == 1) {
-				aktivnaPoteza.zacetno = izbranoPolje;
-				igra.naPotezi.delPoteze++;			
-			}
-			else if(igra.naPotezi.delPoteze  == 2) {
-				aktivnaPoteza.koncno = izbranoPolje;
-				igra.naPotezi.delPoteze++;
-			}
-			else if (igra.naPotezi.delPoteze == 3) {
-				if (igra.obstajaMlin())
-					aktivnaPoteza.vzemi = izbranoPolje;
-				
-				repaint();
-				novaPoteza();
-			}
 			break;
 		}
 		repaint(); 
@@ -273,11 +261,4 @@ public class GUIigralnaPlosca extends JPanel implements MouseListener, MouseMoti
 		
 	}
 
-	private void novaPoteza () {
-		aktivnaPoteza.zacetno = null;
-		aktivnaPoteza.koncno = null;
-		aktivnaPoteza.vzemi = null;
-		igra.naPotezi.delPoteze = 1;
-		
-	}
 }

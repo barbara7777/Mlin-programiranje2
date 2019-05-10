@@ -13,6 +13,7 @@ public class Igra {
 	
 	boolean imamMlin;
 	boolean premikam;
+	boolean zamrzni;
 	
 	
 	public Igra() {
@@ -22,8 +23,6 @@ public class Igra {
 		racunalnik = new Igralec("racunalnik");
 		naPotezi = igralec;
 		nasprotnik = racunalnik;
-		imamMlin = false;
-		premikam = false;
 	}
 	
 	/* Preveri, èe smo s tem ko smo zasedli polje, naredili mlin. 
@@ -54,6 +53,7 @@ public class Igra {
 		return (polje.zasedenost == nasprotnik.ime);
 	}
 
+	
 	public boolean jeIgralcevo (Polje polje) { // preveri, èe polje pripada tistemu, ki je na potezi
 		return (polje.zasedenost == naPotezi.ime);
 	}
@@ -76,17 +76,19 @@ public class Igra {
 	}
 	
 	
-	public void premakni(Igralec player, Polje zacetno, Polje koncno) {
+	public boolean premakni(Igralec player, Polje zacetno, Polje koncno) {
 		if (Pravila.lahkoPremaknem(zacetno, koncno, this)) {
 			if (zacetno.zasedenost != player.ime)
-				return;
+				return false;
 			zacetno.zasedenost = Polje.prazno;
 			koncno.zasedenost = player.ime;
 			if (jeMlin(koncno.indeks).size() > 1)
 				imamMlin = true;
-			zamenjajIgralca();
+			//zamenjajIgralca();
+			return true;
 		}
 		// preveri, èe je konec igre in kaj se takrat zgodi...
+		return false;
 	}
 	
 	
@@ -102,23 +104,26 @@ public class Igra {
 			vzemi.zasedenost = Polje.prazno;
 			nasprotnik.ploscki--;
 			imamMlin = false;
-			zamenjajIgralca();
 			Igralec.naslednjaFaza(nasprotnik);
+			zamenjajIgralca();
 		}
 		konecIgre(); //preveri, èe je že konec igre
 	}
 	
 	
-	private void zamenjajIgralca() {
+	public void zamenjajIgralca() {
 		// ko je konec poteze, je na vrsti drugi igralec
 		naPotezi = (naPotezi == igralec) ? racunalnik : igralec;
 		nasprotnik = (naPotezi == igralec) ? racunalnik : igralec;
 	}
 
 		
-	private boolean konecIgre() {
-	return ((igralec.faza == 3 && igralec.ploscki < 3) ||
-			(racunalnik.faza == 3 && racunalnik.ploscki < 3));
+	private void konecIgre() {
+	if ((igralec.faza == 3 && igralec.ploscki < 3) ||
+		(racunalnik.faza == 3 && racunalnik.ploscki < 3)) {
+		System.out.println("konc igre");
+		zamrzni = true;
+	}
 	}
 
 	
