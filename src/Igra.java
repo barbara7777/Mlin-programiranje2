@@ -1,4 +1,3 @@
-import java.util.Arrays;
 import java.util.Set;
 import java.util.Vector;
 
@@ -118,12 +117,14 @@ public class Igra {
 	}
 
 		
-	private void konecIgre() {
+	public boolean konecIgre() {
 	if ((igralec.faza == 3 && igralec.ploscki < 3) ||
 		(racunalnik.faza == 3 && racunalnik.ploscki < 3)) {
-		System.out.println("konc igre");
+		System.out.println("konec igre");
 		zamrzni = true;
+		return true;
 	}
+	return false;
 	}
 
 	

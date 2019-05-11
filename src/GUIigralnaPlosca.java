@@ -110,45 +110,12 @@ public class GUIigralnaPlosca extends JPanel implements MouseListener, MouseMoti
 		return 60 + x*90;
 	}
 	
-	 /// test
-	  public static void main(String[] args) {
-	    JFrame.setDefaultLookAndFeelDecorated(true);
-	    JFrame frame = new JFrame("Igra mlin");
-	    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	    frame.setBackground(Color.WHITE);
-	    frame.setSize(700, 700);
-	 
-	    GUIigralnaPlosca panel = new GUIigralnaPlosca(600, 600);
-	 
-	    frame.add(panel);
-	    frame.setVisible(true);
-	  }
 	
-	// Spodaj so funkcije ob klikih, ....
-	
-	@Override
-	public void mouseClicked(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mouseEntered(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mouseExited(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	static void prt (String s) 
-	{	
+	static void prt (String s) {	
 		System.out.println(s);
 	}
 	
+	// Spodaj so funkcije ob klikih, ....
 	
 	@Override
 	public void mousePressed(MouseEvent e) {
@@ -188,12 +155,24 @@ public class GUIigralnaPlosca extends JPanel implements MouseListener, MouseMoti
 			//ker ce mlin je, potem morem enega vzeti). Ce ni mlina, lahko vse resitiram
 			//Ce pa je mlin, moram enega vzeti
 			
+			if (igra.imamMlin){
+				//Poberemo ploscico, ce je poteza veljavna
+				if (!igra.jeNasprotnikovo(izbranoPolje)) {
+					prt("Poskusal si vzeti ploscek ki ni nasprotikov. Ponovi.");
+					break;
+				}
+				igra.vzemiPloscek(izbranoPolje);
+				zacetno = null;
+				koncno = null;
+				break;
+			}
 			if (zacetno == null) { // Zacetno je treba nastaviti
 				if (igra.jeIgralcevo(izbranoPolje)) {
 					prt("Izbral si zacetno polje premika");
 					zacetno = izbranoPolje;
 				}
 				else
+					izbranoPolje = null;
 					prt("Za zacetno polje si izbral neveljavno. Ponovi.");
 				break;
 			}
@@ -201,6 +180,8 @@ public class GUIigralnaPlosca extends JPanel implements MouseListener, MouseMoti
 				//Koncno polje je lahko samo prazno polje
 				if (!Pravila.jePraznoPolje(igra.naPotezi, izbranoPolje, igra)) {
 					prt("Za koncno polje nisi izbral praznega polja. Ponovi izbiro koncega polja");
+					zacetno = null;
+					izbranoPolje = null;
 					break;
 				}
 				koncno = izbranoPolje;
@@ -224,17 +205,6 @@ public class GUIigralnaPlosca extends JPanel implements MouseListener, MouseMoti
 				koncno = null;
 				igra.zamenjajIgralca();
 			}
-			else {
-				//Poberemo ploscico, ce je poteza veljavna
-				if (!igra.jeNasprotnikovo(izbranoPolje)) {
-					prt("Poskusal si vzeti ploscek ki ni nasprotikov. Ponovi.");
-					break;
-				}
-				igra.vzemiPloscek(izbranoPolje);
-				zacetno = null;
-				koncno = null;
-				break;
-			}
 			repaint();
 			break;
 		}
@@ -242,21 +212,15 @@ public class GUIigralnaPlosca extends JPanel implements MouseListener, MouseMoti
 	}
 
 	@Override
-	public void mouseReleased(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
+	public void mouseClicked(MouseEvent arg0) {}
 	@Override
-	public void mouseDragged(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
+	public void mouseEntered(MouseEvent arg0) {}
 	@Override
-	public void mouseMoved(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
+	public void mouseExited(MouseEvent arg0) {}
+	@Override
+	public void mouseReleased(MouseEvent arg0) {}
+	@Override
+	public void mouseDragged(MouseEvent e) {}
+	@Override
+	public void mouseMoved(MouseEvent e) {}
 }
