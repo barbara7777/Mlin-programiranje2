@@ -7,7 +7,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.util.Set;
-import java.util.Vector;
 
 import javax.swing.*;
 
@@ -15,7 +14,7 @@ import javax.swing.*;
 public class GUIigralnaPlosca extends JPanel implements MouseListener, MouseMotionListener {
 	
 	int sirina, visina;
-	static Igra igra;
+	Igra igra;
 	Polje izbranoPolje;
 	Polje zacetno = null;
 	Polje koncno = null;
@@ -60,7 +59,6 @@ public class GUIigralnaPlosca extends JPanel implements MouseListener, MouseMoti
 		addMouseMotionListener(this);
 		setFocusable(true);
 	}
-	
 
 	
 	@Override
