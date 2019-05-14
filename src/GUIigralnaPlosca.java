@@ -54,7 +54,6 @@ public class GUIigralnaPlosca extends JPanel implements MouseListener, MouseMoti
 		debelinaPovezave = 3; 
 		debelinaRoba = 1;
 		
-		// dodati moramo še metode, ki sledijo miški in tipkovnici; to platno je tisto, ki presreže te metode
 		addMouseListener(this);
 		addMouseMotionListener(this);
 		setFocusable(true);
@@ -128,88 +127,14 @@ public class GUIigralnaPlosca extends JPanel implements MouseListener, MouseMoti
 				izbranoPolje = polje;		
 			}
 		}
-		if (izbranoPolje == null) { // klik mimo vsakega polja. izmislim si polje, da se izognem erroru
+		if (izbranoPolje == null) { 
 			return;
-			//izbranoPolje = new Polje(-1);
-			//izbranoPolje.zasedenost = "neveljavno polje";
 			}
-		
-		
-		switch (igra.naPotezi.faza) { 
-		case 1:
-			if (igra.imamMlin) {
-				igra.vzemiPloscek(izbranoPolje);
-			}
-			else{
-				igra.postaviPloscek(izbranoPolje);
-			}
-			repaint();
-			break;
-			
-		case 2:
-		case 3:
-			//na zacetku so vsi null, to so: zacetno, koncno,vzemi
-			//Ce je zacetno null, ga nastavim. Tu mlina ne more biti
-			//Ce zacetno ni null, koncno pa je, potem moram nastaviti konco. Tudi tu mlina ni
-			//Ce zacetno ni null in koncno ni null, potem ga je treba prestavit (samo ce mlina ni 
-			//ker ce mlin je, potem morem enega vzeti). Ce ni mlina, lahko vse resitiram
-			//Ce pa je mlin, moram enega vzeti
-			
-			if (igra.imamMlin){
-				//Poberemo ploscico, ce je poteza veljavna
-				if (!igra.jeNasprotnikovo(izbranoPolje)) {
-					prt("Poskusal si vzeti ploscek ki ni nasprotikov. Ponovi.");
-					break;
-				}
-				igra.vzemiPloscek(izbranoPolje);
-				zacetno = null;
-				koncno = null;
-				break;
-			}
-			if (zacetno == null) { // Zacetno je treba nastaviti
-				if (igra.jeIgralcevo(izbranoPolje)) {
-					prt("Izbral si zacetno polje premika");
-					zacetno = izbranoPolje;
-				}
-				else
-					izbranoPolje = null;
-					prt("Za zacetno polje si izbral neveljavno. Ponovi.");
-				break;
-			}
-			if (koncno == null) { // Koncno polje je treba nastaviti
-				//Koncno polje je lahko samo prazno polje
-				if (!Pravila.jePraznoPolje(igra.naPotezi, izbranoPolje, igra)) {
-					prt("Za koncno polje nisi izbral praznega polja. Ponovi izbiro koncega polja");
-					zacetno = null;
-					izbranoPolje = null;
-					break;
-				}
-				koncno = izbranoPolje;
-				prt("Izbral si koncno polje");
-			}
-			//Tukaj je treba torej ploscico prestaviti, ce mlina ni (pri prestavitvi ga ne sme se biti)
-			if (!igra.imamMlin) {  //Prestavimo ploscico
-				if (!igra.premakni(igra.naPotezi,  zacetno, koncno)) {
-					prt("Poteza ni mozna, ker polja nista povezana. Ponovi potezo");
-					koncno = null;
-					zacetno = null;
-					break;
-				}
-				//Ce zdaj ni mlina na novo, potem
-				//lahko resitiram vse. Ce je, potrebujem nov klik
-				if (igra.imamMlin) { //Ker je mlin, potrebujem klik
-					prt("Naredil si mlin. Vzemi en ploscek");
-					break;
-				}
-				zacetno = null;
-				koncno = null;
-				igra.zamenjajIgralca();
-			}
-			repaint();
-			break;
-		}
+		igra.narediPotezo(izbranoPolje);
 		repaint(); 
-	}
+		}
+		
+		
 
 	@Override
 	public void mouseClicked(MouseEvent arg0) {}

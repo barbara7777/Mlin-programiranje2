@@ -152,6 +152,7 @@ public class GUIokno extends JFrame implements ActionListener, MouseListener {
 		else if (source == novaIgra) {
 			labelPomoc.setText("");
 			naPotezi.setText(naPoteziOsnovni);
+			plosca.izbranoPolje = null;
 			
 			plosca.igra = new Igra();
 			repaint();
