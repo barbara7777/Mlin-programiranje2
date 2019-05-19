@@ -10,7 +10,11 @@ import javax.swing.JButton;
 import javax.swing.JColorChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JCheckBoxMenuItem ;
 import javax.swing.border.LineBorder;
 
 @SuppressWarnings("serial")
@@ -18,8 +22,12 @@ public class GUIokno extends JFrame implements ActionListener, MouseListener {
 	
 	int sirina = 70;
 	int visina = 70;
-	
+
 	String naPoteziOsnovni;
+	
+	JMenuItem menuProtiRacunalniku;
+	JMenuItem  menuProtiDrugemuIgralcu;
+	JCheckBoxMenuItem  menuOznacevanjePotez;
 	
 	private JButton novaIgra;
 	private JButton pomoc;
@@ -40,14 +48,36 @@ public class GUIokno extends JFrame implements ActionListener, MouseListener {
 	private GUIigralnaPlosca plosca;
 	
 	
-	
+	// konstruktor -----------------------------------------------
 	public GUIokno(int sirina, int visina) {
 		super();
 		this.setTitle("Igra mlin");
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setSize(sirina, visina);
 		naPoteziOsnovni = "<html>Zacne<br>igralec 1</html>";
-		//naPoteziOsnovni = "<html>Zacne \n\r<br> </html> igralec 1 abrakadabra cirule carule";
+	
+		//naredi zgornjo vrstico za izbiranje MENU
+		JMenuBar menubar = new JMenuBar();
+		JMenu menuNasprotnik = new JMenu("Nasprotnik");
+		JMenu menuPoteze = new JMenu("Oznaèevanje potez");
+		
+		menuProtiRacunalniku = new JMenuItem("Igraj proti raèunalniku");
+		menuProtiDrugemuIgralcu = new JMenuItem("Igraj proti drugemu igralcu (èoveku)");
+		menuOznacevanjePotez = new JCheckBoxMenuItem ("Oznaèi možne poteze");
+		
+		menuNasprotnik.add(menuProtiRacunalniku);
+		menuNasprotnik.add(menuProtiDrugemuIgralcu);
+		menuPoteze.add(menuOznacevanjePotez);
+		
+		menubar.add(menuNasprotnik);
+		menubar.add(menuPoteze);
+		
+		menuProtiRacunalniku.addActionListener(this);
+		menuProtiDrugemuIgralcu.addActionListener(this);
+		menuOznacevanjePotez.addActionListener(this);
+		
+		setJMenuBar(menubar);
+		// konec menuja
 		
 		plosca = new GUIigralnaPlosca(sirina - 160, visina);
 		this.getContentPane().add(plosca, "West");
@@ -66,7 +96,7 @@ public class GUIokno extends JFrame implements ActionListener, MouseListener {
 		orodjarna3 = new JPanel();
 		//orodjarna3.setBackground(Color.GRAY);
 		//orodjarna3.setBorder(new LineBorder(Color.GRAY, 3));
-		orodjarna3.setLayout(new GridLayout(2, 1, 10, 10));
+		//orodjarna3.setLayout(new GridLayout(2, 1, 10, 10));
 		orodjarna.add(orodjarna3);
 		//
 		
@@ -105,10 +135,12 @@ public class GUIokno extends JFrame implements ActionListener, MouseListener {
 		orodjarna.add(labelIgralec2);
 		orodjarna.add(izberiBarvo2);
 		
+		
 		novaIgra.addActionListener(this);
 		pomoc.addActionListener(this);
 		izberiBarvo1.addActionListener(this);
 		izberiBarvo2.addActionListener(this);
+		
 		
 		plosca.addMouseListener(this);
 		setVisible(true);
@@ -119,7 +151,7 @@ public class GUIokno extends JFrame implements ActionListener, MouseListener {
 		return new Dimension(sirina, visina);
 	}
 	
-	
+
 	@Override
 	public void actionPerformed(ActionEvent event) {
 		Object source = event.getSource();
@@ -135,7 +167,6 @@ public class GUIokno extends JFrame implements ActionListener, MouseListener {
 					barva1 = novaBarva;
 					labelIgralec1.setBackground(barva1);
 					plosca.barvaPlosckov2 = barva1;
-					repaint();
 				}
 			}
 		else if (source == izberiBarvo2) {
@@ -145,7 +176,6 @@ public class GUIokno extends JFrame implements ActionListener, MouseListener {
 				barva2 = novaBarva;
 				labelIgralec2.setBackground(barva2);
 				plosca.barvaPlosckov1 = barva2;
-				repaint();
 			}
 		}
 		
@@ -153,29 +183,44 @@ public class GUIokno extends JFrame implements ActionListener, MouseListener {
 			labelPomoc.setText("");
 			naPotezi.setText(naPoteziOsnovni);
 			plosca.izbranoPolje = null;
-			
-			plosca.igra = new Igra();
+			Igra.novaIgra();
+		}
+		repaint();
+		
+		if (source == menuProtiRacunalniku) {
+			Igra.igramProtiAI = true;
+			Igra.novaIgra();
+		}
+		
+		else if (source == menuProtiDrugemuIgralcu) {
+			Igra.igramProtiAI = false;
+			Igra.novaIgra();
+		}
+		
+		else if (source == menuOznacevanjePotez) {
+			Igra.oznaciMoznePoteze = !Igra.oznaciMoznePoteze
+					;
 			repaint();
 		}
-	
+		
 	}
 	
-	public static void main(String[] args) {
-	    new GUIokno(840, 700);
-	}
-
 	@Override
 	public void mouseClicked(MouseEvent arg0) {
-		String ime = (plosca.igra.naPotezi.ime.equals("racunalnik")) ? "igralec 2": "igralec 1";
+		String ime = (Igra.naPotezi.ime.equals("racunalnik")) ? "igralec 2": "igralec 1";
 		String text = "<html>Na potezi je<br>"+ime+"</html>";
 		naPotezi.setText(text);
-		if(plosca.igra.konecIgre()) {
-			String zmagal = (plosca.igra.naPotezi.ime.equals("racunalnik")) ? "igralec 1": "igralec 2";
+		if (Igra.igramProtiAI && Igra.konecIgre()) {
+			if (Igra.naPotezi == Igra.igralec2) {
+				naPotezi.setText("<html>Zmagal je<br> raèunalnik.</html>");
+			}
+		}
+		else if (Igra.konecIgre()) {
+			String zmagal = (Igra.naPotezi == Igra.igralec1) ? "igralec 1": "igralec 2";
 			naPotezi.setText("<html>Zmagal je<br>"+zmagal+"</html>");
 		}
 	}
 	
-	// spodnjih funkcij ne potrebujem
 	@Override
 	public void mouseEntered(MouseEvent arg0) {}
 	@Override

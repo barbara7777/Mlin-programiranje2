@@ -20,7 +20,7 @@ public abstract class Pomoc {
 			"Vztrajaj!",
 			"Ne obupaj!",
 			"Potrudi se!", 
-			"<html>Naslednja boteza<br>bo zmagovalna!</html>",
+			"<html>Naslednja poteza<br>bo zmagovalna!</html>",
 			"Zmoreš."
 	};
 	

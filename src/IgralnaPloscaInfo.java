@@ -24,16 +24,8 @@ public class IgralnaPloscaInfo {
 	 static Vector<Set<Set<Integer>>> kandidatiZaMlin;
 	
 	
-	// main za testiranje
-	public static void main(String[] args) {
-		IgralnaPloscaInfo p = new IgralnaPloscaInfo();
-		for (Polje polje : p.tabela) {
-			System.out.println("Indeks " + polje.indeks + " koordinati: " + polje.vrstica + " " + polje.stolpec);
-		}
-	}
-	
-	// konstruktor
-	public IgralnaPloscaInfo() {
+	public static void ustvariIgralnoPlosco() 
+	{
 		// sestavi množico trojic
 		for (int i : (new int[] {0, 2, 15, 17})) { //izhodišèni indeksi za te trojice
 			Set<Integer> trojica = new HashSet<>();
@@ -48,10 +40,10 @@ public class IgralnaPloscaInfo {
 		}
 			
 		// sestavi Vector trojic, kandidatov za mlin
-		naredi();
+		narediKandidateZaMlin();
 		ustvariPovezave();
+		
 	}
-	
 	
 	
 	public static boolean staPovezana (Polje prvo, Polje drugo) { // preveri, èe je med poljema povezava
@@ -67,7 +59,7 @@ public class IgralnaPloscaInfo {
 			(drugo.vrstica == 3 && (stolpci || (prvo.vrstica == 3 && razlikaSt)))) 
 			return true;
 		else if ((prvo.stolpec == 3 && (vrstice || (drugo.stolpec == 3 && razlikaVr))) ||
-				(drugo.stolpec == 3 && (vrstice || (prvo.stolpec == 3 &&razlikaVr))))
+				(drugo.stolpec == 3 && (vrstice || (prvo.stolpec == 3 && razlikaVr))))
 			return true;
 		else return false;
 	}
@@ -108,7 +100,7 @@ public class IgralnaPloscaInfo {
 		return false;
 	}
 	
-	private static void naredi() {
+	private static void narediKandidateZaMlin() {
 		kandidatiZaMlin = new Vector<>();
 		for (int i = 0; i < 24; ++i) {
 			Set<Set<Integer>> zaIzbranoPolje = new HashSet<Set<Integer>>();

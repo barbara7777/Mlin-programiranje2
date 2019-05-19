@@ -21,9 +21,5 @@ public class Polje {
 	public boolean jePrazno() {
 		return (zasedenost == prazno);
 	}
-	
-	public static void main(String[] args) {
-		Polje a = new Polje(23);
-		System.out.println(a.vrstica + " " + a.stolpec + " " + a.indeks);
-	}
+
 }

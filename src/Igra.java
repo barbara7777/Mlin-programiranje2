@@ -1,111 +1,82 @@
-import java.util.Set;
-import java.util.Vector;
-
-
 public class Igra {
-
-	IgraAI racunalnikAI;
-	IgralnaPloscaInfo plosca;
-	int[][] trojice = new int[20][3];
-	public static Igralec igralec, racunalnik;
-	public Igralec naPotezi;
-	public Igralec nasprotnik;
 	
-	boolean imamMlin;
-	boolean premikam;
-	boolean zamrzni;
+	public static Igralec igralec1, igralec2, naPotezi, nasprotnik;
+	static GUIigralnaPlosca GUI = new GUIigralnaPlosca(700, 700);
 	
-	Polje zacetno = null;
-	Polje koncno = null;
-	Polje vzemi = null;
+	static boolean imamMlin = false;
+	static boolean igramProtiAI = true;
+	static boolean zamrzni;
+	static boolean oznaciMoznePoteze;
+	
+	public static Polje zacetno = null;
+	public static Polje koncno = null;
+	public static Polje vzemi = null;
 	
 	
-	public Igra() {
-		plosca = new IgralnaPloscaInfo();
+	public static void main(String[] args) {
+		novaIgra();
+		new GUIokno(840, 710);
+	}
+	
+	public static void novaIgra () {
+		IgralnaPloscaInfo.ustvariIgralnoPlosco();
+		naPotezi = igralec1 = new Igralec("igralec");
+		nasprotnik = igralec2 = new Igralec("racunalnik");
+		zamrzni = false;
+		oznaciMoznePoteze = false;
 		
-		igralec = new Igralec("igralec");
-		racunalnik = new Igralec("racunalnik");
-		naPotezi = igralec;
-		nasprotnik = racunalnik;
-		racunalnikAI = new IgraAI(this);
+		prt("Nova igra");
 	}
 	
-	/* Preveri, èe smo s tem ko smo zasedli polje, naredili mlin. 
-	Vrne vector s trojicami, ki sestavljajo mlin. Ker lahko z eno potezo naredimo veè kot en mlin, 
-	so v vektorji po tri zaporedna polja skupaj en mlin. Torej lahko dobimo vector s tremi, šestimi 
-	ali devetimi elementi. Èe ni mlina, vrne null.
-	*/ 
-	public Vector<Integer> jeMlin(int polje) {
-		Vector<Integer> mlin = new Vector<>(3, 6);
-		Set<Set<Integer>> kandidati = IgralnaPloscaInfo.kandidatiZaMlin.get(polje); // množica parov, ki skupajs poljem polje tvorijo trojico
-
-		for (Set<Integer> par : kandidati) { 
-			Vector<Integer> a = new Vector<>(3);
-			a.add(polje);
-			for (int i : par) {
-				if (IgralnaPloscaInfo.tabela[polje].zasedenost != IgralnaPloscaInfo.tabela[i].zasedenost) 
-					break;
-					a.add(i);
-					// preverim èe imam 3, torej za cel mlin
-					if (a.size() != 0 && a.size() % 3 == 0) mlin.addAll(a);
-			}
-		}
-	return mlin;
+	static void prt (Object o) {
+		System.out.println(o);
 	}
-			
-	// premiki in poteze v igri ----------------------------------------------------------
 	
-	public boolean jeNasprotnikovo (Polje polje) { // preveri, èe polje pripada nasprotniku
+	public static boolean jePoljeNasprotnikovo (Polje polje) { // preveri, èe polje pripada nasprotniku
 		return (polje.zasedenost == nasprotnik.ime);
-	}
-
+	}	
 	
-	public boolean jeIgralcevo (Polje polje) { // preveri, èe polje pripada tistemu, ki je na potezi
+	public static boolean jePoljeIgralcevo (Polje polje) { // preveri, èe polje pripada tistemu, ki je na potezi
 		return (polje.zasedenost == naPotezi.ime);
 	}
-	
-
-	public boolean obstajaMlin () {
-		for (Polje polje : plosca.tabela) {
-			if (jeMlin(polje.indeks).size() > 1 && !plosca.tabela[jeMlin(polje.indeks).get(0)].jePrazno())
-				return true;
+		
+	public static void zamenjajIgralca() {
+		// ko je konec poteze, je na vrsti drugi igralec
+		naPotezi = nasprotnik;
+		nasprotnik = (naPotezi == igralec1) ? igralec2 : igralec1;
+		
+		if(naPotezi == igralec2 && igramProtiAI) {
+			// ce je na potezi racunalnik, on izvede svojo potezo
+			AI.narediRandomPotezo();
 		}
+	}
+	
+	public static boolean klikNaPolje (Polje polje) {
+		//prt("Klik na polje: " + polje.indeks);
+		narediPotezo(polje);
 		return false;
 	}
 	
-	
-	public void zamenjajIgralca() {
-		// ko je konec poteze, je na vrsti drugi igralec
-		naPotezi = (naPotezi == igralec) ? racunalnik : igralec;
-		nasprotnik = (naPotezi == igralec) ? racunalnik : igralec;
-	}
-	
-	
-	public void postaviPloscek(Polje koncno) {
-		if (!Pravila.jePraznoPolje(naPotezi, koncno, this))
+	public static void postaviPloscek(Polje koncno) {
+		if (!Pravila.jePraznoPolje(naPotezi, koncno))
 			return; // èe poteza ni veljavna, ne naredim niè	
 		if (naPotezi.faza == 1) {
 			++naPotezi.stPotez1;
 			Igralec.naslednjaFaza(naPotezi);
 		}
 		koncno.zasedenost = naPotezi.ime;
-		System.out.println("postavljam gor");
+		prt("postavljam gor");
 
-		imamMlin = jeMlin(koncno.indeks).size() > 1;
+		imamMlin = Pravila.jeMlin(koncno.indeks).size() > 1;
 		if (!imamMlin) // èe ni mlina, sem konec s potezo
 			zamenjajIgralca();
 	}
 
-	
-	public void vzemiPloscek(Polje vzemi) {
-		if (premikam) {
-			System.out.println("izpraznim polje");
-			vzemi.zasedenost = Polje.prazno;
-		}
-		else if (imamMlin) {
-			if (!Pravila.lahkoVzamem(naPotezi, vzemi, this))
+	public static void vzemiPloscek(Polje vzemi) {
+		if (imamMlin) {
+			if (!jePoljeNasprotnikovo(vzemi))
 				return;
-			System.out.println("ker imam mlin, vzamem enega");
+			prt("ker imam mlin, vzamem enega");
 			vzemi.zasedenost = Polje.prazno;
 			nasprotnik.ploscki--;
 			imamMlin = false;
@@ -115,14 +86,13 @@ public class Igra {
 		konecIgre(); //preveri, èe je že konec igre
 	}
 	
-	
-	public boolean premakni(Igralec player, Polje zacetno, Polje koncno) {
-		if (Pravila.lahkoPremaknem(zacetno, koncno, this)) {
+	public static boolean premakni(Igralec player, Polje zacetno, Polje koncno) {
+		if (Pravila.lahkoPremaknem(zacetno, koncno, naPotezi)) {
 			if (zacetno.zasedenost != player.ime)
 				return false;
 			zacetno.zasedenost = Polje.prazno;
 			koncno.zasedenost = player.ime;
-			if (jeMlin(koncno.indeks).size() > 1)
+			if (Pravila.jeMlin(koncno.indeks).size() > 1)
 				imamMlin = true;
 			//zamenjajIgralca();
 			return true;
@@ -131,13 +101,8 @@ public class Igra {
 		return false;
 	}
 
-	public void prt (String str) {
-		System.out.println(str);
-	}
-
-	
 	// glavna funkcija, ki dela poteze
-	public void narediPotezo(Polje izbranoPolje) {
+	public static void narediPotezo(Polje izbranoPolje) {
 		switch (naPotezi.faza) { 
 		case 1:
 			if (imamMlin) {
@@ -159,7 +124,7 @@ public class Igra {
 			
 			if (imamMlin){
 				//Poberemo ploscico, ce je poteza veljavna
-				if (!jeNasprotnikovo(izbranoPolje)) {
+				if (!jePoljeNasprotnikovo(izbranoPolje)) {
 					prt("Poskusal si vzeti ploscek ki ni nasprotikov. Ponovi.");
 					break;
 				}
@@ -169,7 +134,7 @@ public class Igra {
 				break;
 			}
 			if (zacetno == null) { // Zacetno je treba nastaviti
-				if (jeIgralcevo(izbranoPolje)) {
+				if (jePoljeIgralcevo(izbranoPolje)) {
 					prt("Izbral si zacetno polje premika");
 					zacetno = izbranoPolje;
 					break;
@@ -181,11 +146,11 @@ public class Igra {
 			}
 			if (koncno == null) { // Koncno polje je treba nastaviti
 				//Koncno polje je lahko samo prazno polje
-				if (jeIgralcevo(izbranoPolje)) {
+				if (jePoljeIgralcevo(izbranoPolje)) {
 					zacetno = izbranoPolje;
 					break;
 				}
-				if (!Pravila.jePraznoPolje(naPotezi, izbranoPolje, this)) {
+				if (!Pravila.jePraznoPolje(naPotezi, izbranoPolje)) {
 					prt("Za koncno polje nisi izbral praznega polja. Ponovi izbiro koncega polja");
 					zacetno = null;
 					izbranoPolje = null;
@@ -216,18 +181,14 @@ public class Igra {
 		}
 	}
 	
-	
-	public boolean konecIgre() {
-	if ((igralec.faza == 3 && igralec.ploscki < 3) ||
-		(racunalnik.faza == 3 && racunalnik.ploscki < 3)) {
-		System.out.println("konec igre");
-		zamrzni = true;
-		return true;
+	public static boolean konecIgre() {
+		if (naPotezi.ploscki < 3 || nasprotnik.ploscki < 3) {
+			System.out.println("konec igre");
+			zamrzni = true;
+			return true;
+			}
+		return false;
 	}
-	return false;
-	}
-
-	
 }
 
 /* OPOMBE:
