@@ -1,4 +1,3 @@
-
 public class Poteza {
 	Polje zacetno = null;
 	Polje koncno = null;
