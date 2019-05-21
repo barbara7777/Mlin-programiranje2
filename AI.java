@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Random;
 public class AI {
 	
+		public Igra igra;
+	
 		// Funkcija, ki pove vse možne poteze - za igralca na potezi vrne list polj, ki jih lahko izbere
 		public static ArrayList<Polje> moznePoteze () { 
 			System.out.println("na potezi je " + Igra.naPotezi.ime);
@@ -139,15 +141,23 @@ public class AI {
 			int count_O = 0;
 			for (int k = 0; k < 24 && (count_X == 0 || count_O == 0); k++) {
 				switch (tabela[k].zasedenost) {
-				case racunalnik: count_O += 1; break;
-				case igralec: count_X += 1; break;
-				case prazno: break;
+				case "racunalnik": count_O += 1; break;
+				case "igralec": count_X += 1; break;
+				case "prazno": break;
 				}
 			}
 			if (count_O > 0 && count_X > 0) { return 0; }
 			else if (jaz == Igra.naPotezi) { return count_O - count_X; }
 			else { return count_X - count_O; }
 		}
+		
+		public void racunalnikovaPoteza() {
+			List<OcenjenaPoteza> ocenjenePoteze = oceniPoteze (igra, 2, clovek.nasprotnik());
+			Poteza poteza = Minimax.maxPoteza(ocenjenePoteze);
+			igra.odigraj(poteza);
+			igramo();
+		}
+		
 		
 		public static void narediRandomPotezo() {
 			while(Igra.naPotezi==Igra.igralec2) {

@@ -56,8 +56,9 @@ public class Igra {
 		if(naPotezi == igralec2 && igramProtiAI) {
 			// ce je na potezi racunalnik, on izvede svojo potezo
 			AI.narediRandomPotezo();
+			}
 		}
-	}
+
 	
 	public static boolean klikNaPolje (Polje polje) {
 		//prt("Klik na polje: " + polje.indeks);
