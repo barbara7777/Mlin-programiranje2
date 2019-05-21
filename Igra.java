@@ -1,6 +1,8 @@
 public class Igra {
 	
-	public static Igralec igralec1, igralec2, naPotezi, nasprotnik;
+	public static Igralec igralec1, igralec2;
+	public static Igralec naPotezi;
+	public static Igralec nasprotnik;
 	static GUIigralnaPlosca GUI = new GUIigralnaPlosca(700, 700);
 	
 	static boolean imamMlin = false;
@@ -27,7 +29,13 @@ public class Igra {
 		
 		prt("Nova igra");
 	}
-	
+	public Igra(Igra igra) {
+		Polje[] tabela = new Polje[24];
+		for (int i = 0; i < 24; i++) {
+			tabela[i] = IgralnaPloscaInfo.tabela[i];
+		}
+		this.naPotezi = igra.naPotezi;
+	}
 	static void prt (Object o) {
 		System.out.println(o);
 	}
@@ -58,6 +66,7 @@ public class Igra {
 	}
 	
 	public static void postaviPloscek(Polje koncno) {
+		System.out.println(IgralnaPloscaInfo.tabela[1].zasedenost);
 		if (!Pravila.jePraznoPolje(naPotezi, koncno))
 			return; // èe poteza ni veljavna, ne naredim niè	
 		if (naPotezi.faza == 1) {

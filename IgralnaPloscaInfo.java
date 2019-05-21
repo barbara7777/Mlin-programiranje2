@@ -45,7 +45,9 @@ public class IgralnaPloscaInfo {
 		
 	}
 	
-	
+	public static Polje[] getTabela() {
+		return tabela;
+	}
 	public static boolean staPovezana (Polje prvo, Polje drugo) { // preveri, èe je med poljema povezava
 		// kako bi to funkcijo napisala na drug naèin - preveri, èe sta vrstici isti, èe sta vzemi switch, preglej kiri vrstici sta isti....
 		// isto ponovi za stolpce
