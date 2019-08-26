@@ -5,7 +5,11 @@ import java.util.List;
 import java.util.Random;
 public class AI {
 	
-		public Igra igra;
+		public static Igra igra;
+		private static final int vrednostzunanjihKotov = 1;
+		private static final int vrednostSrednjihzunanjihKotov = 2;
+		private static final int vrednostKrizisc3 = 3;
+		private static final int vrednostKrizisc4 = 4;
 	
 		// Funkcija, ki pove vse možne poteze - za igralca na potezi vrne list polj, ki jih lahko izbere
 		public static ArrayList<Polje> moznePoteze () { 
@@ -85,6 +89,7 @@ public class AI {
 				int ocena = minimaxPozicijo (tempIgra, globina-1, jaz);
 				ocenjenePoteze.add(new OcenjenaPoteza(p, ocena));			
 			}
+			System.out.println(ocenjenePoteze);
 			return ocenjenePoteze;
 		}
 		
@@ -135,30 +140,37 @@ public class AI {
 			return ocena;	
 		}
 		
+		public static void racunalnikovaPoteza() {
+			List<OcenjenaPoteza> ocenjenePoteze = oceniPoteze (igra, 2, Igra.naPotezi);
+			Polje poteza = maxPoteza(ocenjenePoteze);
+			igra.narediPotezo(poteza);
+		}
+		
 		public static int oceniPolja (Polje p, Igra igra, Igralec jaz) {
 			Polje[] tabela = IgralnaPloscaInfo.getTabela();
-			int count_X = 0;
-			int count_O = 0;
-			for (int k = 0; k < 24 && (count_X == 0 || count_O == 0); k++) {
-				switch (tabela[k].zasedenost) {
-				case "racunalnik": count_O += 1; break;
-				case "igralec": count_X += 1; break;
-				case "prazno": break;
+			int indeks = p.indeks;
+			for (int element : IgralnaPloscaInfo.kotni) {
+				if (indeks == element) {
+					return vrednostzunanjihKotov;
 				}
 			}
-			if (count_O > 0 && count_X > 0) { return 0; }
-			else if (jaz == Igra.naPotezi) { return count_O - count_X; }
-			else { return count_X - count_O; }
+			for (int element : IgralnaPloscaInfo.kotni_sredina) {
+				if (indeks == element) {
+					return vrednostSrednjihzunanjihKotov;
+				} 
+			}
+			for (int element : IgralnaPloscaInfo.trojnikot) {
+				if (indeks == element) {
+					return vrednostKrizisc3;
+				}
+			}
+			for (int element : IgralnaPloscaInfo.cetvornikot) {
+				if (indeks == element) {
+					return vrednostKrizisc4;
+				}
+			}
+			return 0;
 		}
-		
-		public void racunalnikovaPoteza() {
-			List<OcenjenaPoteza> ocenjenePoteze = oceniPoteze (igra, 2, clovek.nasprotnik());
-			Poteza poteza = Minimax.maxPoteza(ocenjenePoteze);
-			igra.odigraj(poteza);
-			igramo();
-		}
-		
-		
 		public static void narediRandomPotezo() {
 			while(Igra.naPotezi==Igra.igralec2) {
 				ArrayList<Polje> vseMozne = moznePoteze();

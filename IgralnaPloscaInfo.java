@@ -19,6 +19,10 @@ import java.util.*;
 public class IgralnaPloscaInfo {
 	public static Polje[] tabela = new Polje[24];
 	private static Set<Set<Integer>> nepovezaneTrojice = new HashSet<>(); 
+	public static ArrayList <Integer> kotni = new ArrayList<Integer>();
+	public static ArrayList <Integer> kotni_sredina = new ArrayList<Integer>();
+	public static ArrayList <Integer> trojnikot = new ArrayList<Integer>();
+	public static ArrayList <Integer> cetvornikot = new ArrayList<Integer>();
 	
 	// na i-tem mestu v tem vectorju je množica neurejenih parov indeksov polj, ki skupaj z i-tim poljem tvorijo trojico
 	 static Vector<Set<Set<Integer>>> kandidatiZaMlin;
@@ -42,11 +46,37 @@ public class IgralnaPloscaInfo {
 		// sestavi Vector trojic, kandidatov za mlin
 		narediKandidateZaMlin();
 		ustvariPovezave();
-		
+		dodaj_v_vektorje();
 	}
 	
 	public static Polje[] getTabela() {
 		return tabela;
+	}
+	public static void dodaj_v_vektorje(){ 
+		kotni.add(0);
+		kotni.add(2);
+		kotni.add(23);
+		kotni.add(21);
+		kotni.add(6);
+		kotni.add(8);
+		kotni.add(15);
+		kotni.add(17);
+		kotni_sredina.add(3);
+		kotni_sredina.add(18);
+		kotni_sredina.add(20);
+		kotni_sredina.add(5);
+		trojnikot.add(1);
+		trojnikot.add(9);
+		trojnikot.add(14);
+		trojnikot.add(22);
+		trojnikot.add(7);
+		trojnikot.add(11);
+		trojnikot.add(12);
+		trojnikot.add(16);
+		cetvornikot.add(4);
+		cetvornikot.add(10);
+		cetvornikot.add(13);
+		cetvornikot.add(19);
 	}
 	public static boolean staPovezana (Polje prvo, Polje drugo) { // preveri, èe je med poljema povezava
 		// kako bi to funkcijo napisala na drug naèin - preveri, èe sta vrstici isti, èe sta vzemi switch, preglej kiri vrstici sta isti....

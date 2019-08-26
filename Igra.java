@@ -55,7 +55,7 @@ public class Igra {
 		
 		if(naPotezi == igralec2 && igramProtiAI) {
 			// ce je na potezi racunalnik, on izvede svojo potezo
-			AI.narediRandomPotezo();
+			AI.racunalnikovaPoteza();
 			}
 		}
 
