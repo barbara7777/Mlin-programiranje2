@@ -134,6 +134,9 @@ public class AI {
 			return poteze;
 	}
 		
+		
+		//s to funkcijo želimo pridobiti naslednji premik, ki bi bil za računalnik najboljši
+		
 		public static Poteza pridobiNaslednjiPremik() {
 			List<Poteza> poteze = pridobiRacpoteze();
 			float maxi = max;
@@ -163,6 +166,9 @@ public class AI {
 			}
 			return najPoteza;
 		}
+		
+		//funkcija, ki vzame random plošček, če pride do mlina
+		
 		private static Polje vzemiPloscek() {
 			List <Polje> igrPolja = pridobiIgrpolja();
 			int n = ThreadLocalRandom.current().nextInt(0, igrPolja.size());
@@ -174,6 +180,9 @@ public class AI {
 			System.out.println("tukaj");
 			return pridobiOcenoZaPotezoRac(1);
 		}
+		
+		
+		//s to funkcijo pridobimo oceno za neko potezo računalnika - vrnemo maksimalno
 		
 		private static float pridobiOcenoZaPotezoRac(int globina) {
 			if (globina == 0) {
@@ -202,6 +211,8 @@ public class AI {
 			return maxOcena;
 		}
 		
+		
+		//s to funkcijo pridobimo oceno za potezo igralca - vrnemo minimalno
 		private static float pridobiOcenoZaPotezoIgr(int globina) {
 			List<Poteza> poteze = pridobiIgrpoteze();
 			float minOcena = min;
@@ -324,6 +335,8 @@ public class AI {
 			}
 			return 0;
 		}
+		
+		// narediRacPotezo() se ne uporablja, ker vrača vrednosti null
 		
 		
 		public static void narediRacPotezo() {
