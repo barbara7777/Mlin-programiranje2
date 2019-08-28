@@ -1,9 +1,9 @@
 
 public class OcenjenaPoteza {
-	Polje poteza;
+	Poteza poteza;
 	int vrednost;
 	
-	public OcenjenaPoteza(Polje p, int vrednost) {
+	public OcenjenaPoteza(Poteza p, int vrednost) {
 		this.poteza = p;
 		this.vrednost = vrednost;
 	}

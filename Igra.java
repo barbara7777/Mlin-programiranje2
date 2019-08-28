@@ -55,7 +55,7 @@ public class Igra {
 		
 		if(naPotezi == igralec2 && igramProtiAI) {
 			// ce je na potezi racunalnik, on izvede svojo potezo
-			AI.racunalnikovaPoteza();
+			AI.narediRandomPotezo();
 			}
 		}
 
@@ -109,6 +109,20 @@ public class Igra {
 		}
 		// preveri, èe je konec igre in kaj se takrat zgodi...
 		return false;
+	}
+	
+	public static void premakni2(Igralec player, Polje zacetno, Polje koncno) {
+		if (Pravila.lahkoPremaknem(zacetno, koncno, naPotezi)) {
+			zacetno.zasedenost = Polje.prazno;
+			koncno.zasedenost = player.ime;
+			
+			if (Pravila.jeMlin(koncno.indeks).size() > 1)
+				imamMlin = true;
+			zacetno.zasedenost = Polje.prazno;
+			koncno.zasedenost = player.ime;
+			//zamenjajIgralca();
+		}
+		// preveri, èe je konec igre in kaj se takrat zgodi...
 	}
 
 	// glavna funkcija, ki dela poteze
@@ -189,6 +203,15 @@ public class Igra {
 			}
 			break;
 		}
+	}
+	
+	public static void narediPotezoRac(Poteza poteza) {
+		zacetno = poteza.zacetno;
+		koncno = poteza.koncno;
+		vzemi = poteza.vzemi;
+		zacetno = null;
+		koncno = null;
+		zamenjajIgralca();
 	}
 	
 	public static boolean konecIgre() {
